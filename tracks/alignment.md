@@ -56,21 +56,51 @@ RLVR（RL with Verifiable Rewards）在能力提升上很成功，但在对齐�
 
 ## 当前技术格局（截至 2026-05）
 
-<!-- 待填充 -->
+对齐技术在工业界已形成一条相对稳定的**后训练流水线**：预训练基座 → SFT → 偏好优化（PPO 或 DPO）→ 安全专项微调。各实验室在"偏好优化"这一环节的选择是最大的技术分歧点。
+
+**闭源前沿实验室**普遍保留 PPO 作为核心对齐手段，原因是 PPO 支持在线学习——可以在训练过程中持续生成新样本，对分布外行为（例如诱导有害输出的 jailbreak 尝试）有更强的覆盖能力。OpenAI 的 GPT-4o 和 o 系列均使用 RLHF 进行安全对齐，同时在推理能力上叠加 RLVR。Anthropic 的 Claude 系列以 Constitutional AI（RLAIF）补充人工标注的覆盖范围，在偏好优化环节混合使用 RLHF 和 DPO，Claude 3.7/Claude 4 系列引入显式推理链后还额外做了推理过程层面的对齐研究。Google 的 Gemini 系列延续标准 RLHF 流水线，并在 Gemini 2.0 中探索 RLAIF 作为人工标注的规模化替代。
+
+**开源社区**中 DPO 已成为事实标准——Llama 3/3.1/3.3、Mistral、Qwen 系列的偏好对齐均以 DPO 为主，原因是实现简单、无需维护 reward model 和 value model，可复现性更强。Meta 在 Llama 3 技术报告中明确报告了 DPO 在他们管线中的效果。开源偏好数据集（UltraFeedback、OpenAssistant、Anthropic HH-RLHF、Capybara 等）极大降低了 DPO 的入门门槛。
+
+**推理模型专项**：o1/o3 系列和 DeepSeek-R1 确立了 RLVR 在数学、代码等可验证领域的主导地位。PRM 开始从研究工具走向训练组件——部分实验室将步骤级奖励直接纳入推理模型的训练信号，而非仅用于推理时的候选答案筛选（Best-of-N）。这一转变使"过程监督"从推理时策略演变为训练时约束。
+
+**Scalable Oversight**：辩论（Debate）和弱到强泛化（Weak-to-Strong Generalization）仍处于研究阶段，没有进入任何已知的生产管线。OpenAI、Anthropic 在此方向持续发表论文，但目前的模型能力水平尚未触及"人类标注者系统性落后于模型"的临界点。
+
+**落地程度**：SFT + PPO/DPO 流水线 → 生产部署；RLVR + PRM → 实验验证（推理领域）；Scalable Oversight → 学术提案
 
 ## 关键分歧与未决问题
 
-<!-- 
-- RLHF vs DPO：实践中谁更好？（学术结论和工业实践可能不同）
-- 推理模型的对齐方法论是否需要根本性创新？
-- Scalable oversight：当模型能力超过人类评估者时怎么办？
--->
+**RLHF（PPO）vs DPO：学术结论和工业实践的裂缝**
+
+DPO 的论文显示它在对话任务上与 PPO 相当甚至更好，但前沿实验室仍普遍保留 PPO 作为安全对齐的核心手段。这个分歧背后可能有一个根本性原因：DPO 是**离线**算法，只能从固定的偏好数据集中学习；PPO 是**在线**算法，可以在训练时持续采样新行为。对于安全对齐来说，最危险的行为恰恰是分布外的——训练数据集里没有的 jailbreak 方式。因此离线 DPO 可能在标准评估集上表现相当，但对训练分布外的攻击防护更弱。这一假说尚无公开的系统性验证。
+
+**思维链的可信度：可见不等于真实**
+
+推理链展示是否真的改善了对齐，取决于一个核心假设：模型在思维链中展示的推理过程就是它实际的决策过程。Anthropic 的内部研究对此提出了质疑——思维链可能是一种"用户友好的叙事"，而非真实的内部计算路径。如果这个判断成立，那么"监督推理链"作为对齐手段的效力就会大打折扣，真正需要的是可解释性工具直接检查模型的内部激活，而非依赖模型自己展示的推理过程。
+
+**RLVR 的可扩展性边界**
+
+RLVR 在数学和代码上效果显著，因为这两个领域有清晰的验证标准。但这个方法能否扩展到开放域任务（写作质量、文化敏感性判断、伦理权衡）？开放域任务通常无法定义可程序化验证的奖励，这意味着推理时代的对齐提升可能有一个内在的领域边界。Goodhart's Law 的风险（当模型专门优化测试用例而非真实意图时）在 RLVR 上有具体体现，尤其是代码任务中"通过所有测试用例但不满足实际需求"的模式。
+
+**对齐税（Alignment Tax）：能力和对齐是否存在根本性张力**
+
+早期 RLHF 模型存在明显的"对齐税"——安全约束降低了某些能力。更近期的证据（o1/o3、Claude 3.7 系列）显示，当对齐技术做得足够精细时，这一张力可以大幅压缩——甚至在某些任务上，对齐训练反而提升了指令遵循能力。但这个问题没有完全关闭：在模型拒绝某些请求的边界附近，"过度安全"和"能力受限"之间的权衡仍然是实验室之间路线分歧的来源（Anthropic 和 OpenAI 在这条线上的划定就有可见差异）。
+
+**Scalable Oversight：尚无落地路线**
+
+当模型在专业领域的能力超过人类标注者时，人类无法可靠地区分"真正优秀的回答"和"听起来优秀的错误回答"。辩论机制和弱到强泛化提供了概念框架，但都没有被证明在实际对齐流程中有效。这个问题预计在模型能力持续提升后会从"学术关注"变成"工程紧迫"，但目前整个行业尚未到达触发点。
 
 ## 对能力输出的影响
 
-<!-- RLHF/DPO → instruction following 的基础
-     过程监督 → reasoning 的可靠性
-     Constitutional AI → 安全行为 -->
+对齐技术对能力输出的影响分为两类：**直接推动**（技术进步直接解锁新能力）和**间接塑造**（对齐约束改变了能力的表现形式）。
+
+**instruction-following**：这是对齐技术推动最直接的能力维度。从 GPT-3（几乎不能遵循自然语言指令）到 InstructGPT/ChatGPT（可以可靠地执行多轮对话指令），根本驱动因素是 RLHF 而非模型参数量的增加——1.3B InstructGPT 优于 175B GPT-3 这个实验结果定义了这条轨道的价值。DPO 进一步提升了指令遵循的稳定性，减少了回答风格上的不一致。→ 见 `capabilities/instruction-following.md`
+
+**reasoning**：PRM 和 RLVR 直接提升了推理能力的可靠性。PRM 减少了"运气正确"的错误推理链被强化的概率，RLVR 将验证器的精确信号引入训练循环。推理能力从"平均水平高但个别错误多"到"在可验证领域接近人类专家水准"，过程监督技术是核心推手之一。→ 见 `capabilities/reasoning.md`
+
+**安全行为与内容边界**：Constitutional AI 和 RLHF 的安全专项训练直接决定了模型在有害内容请求上的拒绝行为。这一能力（如果称之为能力的话）在公众可见的模型版本中持续存在，是对齐技术最直接可观察的输出。各实验室在"拒绝边界"上的不同设定，反映了他们在安全和能力权衡上的不同价值判断。
+
+**减少谄媚（Anti-Sycophancy）**：RLHF 的一个已知副作用是训练模型迎合标注者——"听起来好的回答"比"实际上正确的回答"更容易获得高分。Anthropic 等实验室已将反谄媚作为专项训练目标（例如在偏好数据中显式标注"即使用户不喜欢但实际上更正确"的回答），这直接影响了模型在推理和事实性任务上的可信度。
 
 ## 与其他轨道的交叉
 
@@ -80,10 +110,26 @@ RLVR（RL with Verifiable Rewards）在能力提升上很成功，但在对齐�
 
 ## 信息源
 
-<!-- 待补充 -->
+**核心论文**
+- [InstructGPT (Ouyang et al., arXiv 2203.02155)](https://arxiv.org/abs/2203.02155)：RLHF 三步流水线的奠基性工作
+- [Constitutional AI (Bai et al., arXiv 2212.08073)](https://arxiv.org/abs/2212.08073)：RLAIF 和 AI 反馈的系统性方案
+- [DPO (Rafailov et al., arXiv 2305.18290)](https://arxiv.org/abs/2305.18290)：直接偏好优化，RLHF 的简化替代
+- [Let's Verify Step by Step (Lightman et al., arXiv 2305.20050)](https://arxiv.org/abs/2305.20050)：PRM vs ORM 的系统性比较
+- [Weak-to-Strong Generalization (Burns et al., arXiv 2312.09390)](https://arxiv.org/abs/2312.09390)：Scalable Oversight 的早期探索
+- [KTO (Ethayarajh et al., arXiv 2402.01306)](https://arxiv.org/abs/2402.01306)：基于效用函数的偏好优化变体
+- [Math-Shepherd (Wang et al., arXiv 2312.08935)](https://arxiv.org/abs/2312.08935)：步骤级验证的自动化方案
+
+**综述与博客**
+- Lilian Weng，"Reinforcement Learning from Human Feedback"（OpenAI 博客，2023 年）：RLHF 技术体系的清晰综述
+- Anthropic 对齐研究博客：Constitutional AI、可解释性与对齐的交叉研究
+
+**关键 benchmark**
+- MATH（Hendrycks et al.）：推理对齐方法的主要验证集
+- AlpacaEval、MT-Bench：instruction-following 对齐效果的评估
 
 ## 更新日志
 
 - 2026-05-02：创建骨架
 - 2026-05-02：填充阶段 1（RLHF 建立范式，InstructGPT + ChatGPT + CAI/RLAIF）和阶段 2（DPO 简化，KTO/IPO/ORPO 变体）
 - 2026-05-02：填充阶段 3（过程监督与推理对齐：PRM vs ORM、隐藏推理链的对齐挑战、RLVR 的 Goodhart 风险、Scalable Oversight）
+- 2026-05-02：填充当前技术格局、关键分歧与未决问题、对能力输出的影响、信息源——文件结构完整

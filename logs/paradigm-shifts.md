@@ -139,6 +139,42 @@
 - **置信度**：高
 - **关联文件**：eras/era4-reasoning.md，tracks/training.md（阶段 4）
 
+## 2024-06｜DCLM 确立模型过滤取代启发式过滤为预训练数据标准
+
+- **轨道**：data
+- **替代了什么**：启发式规则过滤（语言检测 + 长度过滤 + 关键词黑名单）作为预训练数据清洗的主要手段
+- **为什么**：DCLM（NeurIPS 2024）在标准化对照实验中证明，基于 ML 分类器的文档质量打分显著优于启发式过滤；DCLM-Baseline 7B 在 MMLU 上比前开放 SOTA 提升 6.6 个百分点，计算量减少 40%。FineWeb 同年通过 15T tokens 的规模验证了这一路线
+- **影响的能力**：几乎所有能力的基础，知识密集型任务（MMLU、GPQA）提升最直接
+- **置信度**：高
+- **关联文件**：tracks/data.md（阶段 4）
+
+## 2024-01｜Model Collapse 研究确认合成数据不能完全替代真实数据
+
+- **轨道**：data, training
+- **替代了什么**：关于合成数据可以无限递归扩展预训练数据的乐观预期
+- **为什么**：Nature 2024（Shumailov et al.）通过递归训练实验证实：每代模型词汇和语义多样性持续下降，原始分布尾部信息不可逆丢失，即使 1/1000 比例的合成数据长期也有退化效应。结论是预训练中合成数据必须与真实数据混合，纯合成递归不可行
+- **影响的能力**：间接影响所有能力的天花板（制约了合成数据 + 无限扩展的路线）
+- **置信度**：高（实验室实验，实际生产阈值仍有讨论）
+- **关联文件**：tracks/data.md（阶段 3）
+
+## 2025-01｜Llama 4 标志 Dense Transformer 从 frontier 旗舰模型退场
+
+- **轨道**：architecture
+- **替代了什么**：Dense Transformer 作为所有规模旗舰模型的默认选择；Llama 3.x 系列一直坚持 Dense，Llama 4 是 Meta 第一次放弃
+- **为什么**：在数百 B 参数规模下，Dense 的训练和推理成本无法承受；MoE（400B total / 17B active）在相近质量下推理成本仅为对应 Dense 的 ~4%；同期 DeepSeek-V3、Qwen 3、GLM-5 也全部采用 MoE，形成全面共识
+- **影响的能力**：所有能力——MoE 解耦了知识容量与推理成本，使更大的知识存储在相同服务成本下可行
+- **置信度**：高
+- **关联文件**：tracks/architecture.md（当前技术格局），tracks/scaling.md（MoE 重新定义"规模"）
+
+## 2025-01｜MoE Scaling Laws 与密集模型不兼容，需要独立理论框架
+
+- **轨道**：scaling, architecture
+- **替代了什么**：将密集模型 scaling laws（N/D/C 三元框架）直接套用到 MoE 模型的做法；以及"MoE 比 dense 更内存昂贵"的传统认知
+- **为什么**：Ludziejewski et al.（ICLR 2025，arXiv 2502.05172）在 280+ 个实验中证明 MoE 需要五因子框架（激活参数、总参数、专家数、共享专家比例、数据量），且在合理配置下 MoE 比同质量密集模型更内存高效，这推翻了直接外推 Chinchilla 到 MoE 的做法
+- **影响的能力**：间接影响所有能力——MoE scaling laws 的准确性决定了实验室能否有效分配 MoE 模型的训练资源
+- **置信度**：高（ICLR 同行评审，280+ 实验验证，但最大实验规模仅到 5B total 参数，超大规模外推仍有不确定性）
+- **关联文件**：tracks/scaling.md（当前技术格局），tracks/architecture.md（MoE 章节）
+
 ## 2023-06｜vLLM / PagedAttention 确立 serving 效率的新基准
 
 - **轨道**：inference

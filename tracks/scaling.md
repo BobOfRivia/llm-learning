@@ -76,20 +76,37 @@ o3 的实验数据把这个理论具象化了。ARC-AGI 上 o3 high compute（�
 
 ## 当前技术格局（截至 2026-05）
 
-<!-- 待填充 -->
+Scaling 曲线在 2024-2026 年间从单轴（训练时算力）演化为三条并行的轴线。
+
+**预训练轴：过训练已成行业标配，数据质量取代算力成为主要瓶颈。** Chinchilla 建议的 20:1 tokens-to-params 比例早已被打破——Llama 3 8B 在 15T tokens 上训练（约 1800:1），Qwen3-0.6B 达到约 60,000:1，Liquid AI LFM2.5-350M 甚至达到 80,000:1，且在这些极端过训练点上模型质量仍在持续改进。Sardana & Frankle（2024，arXiv 2401.00448）从理论上证明了这一方向的合理性：当服务规模达到数亿请求时，用更多数据训练更小的模型，总体经济成本（训练 + 推理）远低于 Chinchilla 建议的大模型。
+
+**MoE 轴：参数量和激活计算量解耦，Scaling Laws 需要重写。** DeepSeek-V3（671B 总参数 / 37B 活跃参数）和 GPT-4（据报道类似架构）使得"模型规模"这个单一数字变得不再有意义。Ludziejewski et al.（ICLR 2025，arXiv 2502.05172）系统证明 MoE 模型的最优 scaling 行为无法从密集模型的 scaling laws 推导，需要同时考虑激活参数、总参数、专家数量、共享专家比例和数据量五个因子。反直觉的发现：在合理配置下，MoE 比同质量密集模型**更内存高效**，不仅仅是计算高效。
+
+**推理时扩展轴：第二条独立的能力 scaling 曲线已确立。** 从 o1（2024 年 9 月）到 o3、DeepSeek-R1、Gemini 2.5 Pro，推理时计算现在是能力的显性设计参数。DeepSeek-R1 在 AIME 上的表现从无推理扩展时的 15.6% 提升到多数投票下的 86.7%，这条曲线呈对数线性（ICLR 2025，Inference Scaling Laws）。关键约束：推理时 scaling 的有效性取决于任务的**可验证性**——有明确验证标准的数学、代码任务效果显著；开放性写作任务因为缺乏可靠的过程评估信号，推理时 scaling 收益有限。
+
+三轴并行的结果是：成本竞争格局从"谁能训更大的模型"转变为"谁能在三条轴线上找到最优的资源分配"。DeepSeek-V3 的训练成本据报告约 560 万美元——这在 2020 年的认知框架里是不可思议的，当时同等能力被认为需要数亿美元。
 
 ## 关键分歧与未决问题
 
-<!-- 
-- 训练时 scaling 是否已触顶？("scaling wall" 之争)
-- 推理时 scaling 的效率天花板在哪？
-- 小模型+大推理 vs 大模型+少推理，什么场景下哪个更优？
--->
+**"预训练 scaling 触顶"之争是当前分歧最大的问题。** Ilya Sutskever（Safe Superintelligence）公开表示预训练收益已平台化；Sam Altman（OpenAI）坚持"no scaling wall"立场；Dario Amodei（Anthropic）措辞更谨慎，认为 scaling "可能会继续"。分歧的根源在于如何定义"scaling"的边界——如果把架构创新（MoE）、数据质量提升、后训练方法改进都算进去，能力曲线仍在上升；如果只看"堆更多高质量 tokens + 更多参数"的原始形式，增益确实在递减。这个争论没有单一正确答案，因为问的不是同一个问题。
+
+**合成数据能否接棒高质量人类文本枯竭后的预训练 scaling，目前没有定论。** Epoch AI 的估算表明高质量英文文本在 2026-2032 年会被耗尽。理论上，合成数据可以延伸这条曲线——Phi-4 和 DeepSeek-R1 都用了大量合成数据，效果不差。但 Model Collapse 研究（Nature 2024）证明无限递归地用合成数据训练会导致退化，必须混入真实数据。合成数据是否能在保持真实数据混入的前提下无限扩展，实验证据不足。
+
+**推理时 scaling 的上界问题：上界由可验证性决定，但可验证性本身可以工程化。** 当前的推理时 scaling 有效性在不同领域差异很大——物理 > 化学 > 生物，主要原因是前者有更确定的验证标准。这意味着推理时 scaling 的瓶颈不只是计算量，更是验证器质量。Scalable verification（如何训练能可靠评估复杂推理的验证器）是推理时 scaling 能否继续延伸的关键依赖。
+
+**MoE 的长期 scaling 行为尚未系统研究到超大规模。** ICLR 2025 的 MoE scaling laws 实验最大在 2.7B active / 5B total 参数规模上验证，外推到数百亿活跃参数规模的准确性未知。GPT-4 和 DeepSeek-V3 等大型 MoE 模型的训练细节没有完整公开，业界的大规模 MoE 实验数据几乎不透明。
+
+**小模型 + 大推理 vs 大模型 + 少推理的最优切换点，取决于任务特性。** 两者不是简单的替代关系——推理时 scaling 在某些任务上可以让小模型超越大模型的单次前向传播，但无法弥补参数量带来的世界知识差距。对于高度依赖知识检索的任务，大模型仍有不可替代的优势；对于结构化推理任务，小模型 + 验证器 + 搜索可以极具竞争力。
 
 ## 对能力输出的影响
 
-<!-- Scaling laws → 所有能力维度的基线提升
-     推理时扩展 → reasoning 能力的质变 -->
+**阶段 1（Scaling Laws 发现）→ 所有能力维度的基线提升。** Kaplan 的幂律关系确立了"更大参数 = 更好性能"的通用规律，这不只影响某个特定能力，而是使所有 benchmark 上的表现随模型规模系统性提升。这阶段最重要的能力变化是**知识储量**和**语言理解**——参数规模的提升使得模型能记住更多事实、理解更复杂的语境。
+
+**阶段 2（Chinchilla 修正）→ 同等算力下能力提升，加速了 alignment 成本的合理化。** Chinchilla 的核心贡献是把相同计算预算分配给了更多数据——这对**指令跟随（instruction following）**和**基础推理（reasoning）**的影响尤为明显，因为这些能力对数据多样性非常敏感。
+
+**阶段 3（过训练策略）→ 部署民主化，边缘推理的能力跃升。** Llama 3 8B 在多数任务上超越 Llama 2 70B 是这阶段最戏剧性的结果。这意味着**工具调用（tool use）**、**指令跟随**、**代码生成**这些能力开始在消费级 GPU 上可用，开源社区的部署门槛大幅降低，推动了 Agent 工程的民主化。
+
+**阶段 4（推理时扩展）→ 数学/代码/科学推理的质变，但非所有能力受益均等。** o3 在 ARC-AGI 上从 5%（GPT-4o）跳到 88%（high compute 档位）是推理时 scaling 最极端的实证。受益最大的能力是有明确验证标准的**推理（reasoning）**和**代码生成**；受益有限的是**创意写作**、**开放对话**等验证信号弱的场景。→ 详见 [capabilities/reasoning.md](../capabilities/reasoning.md) 和 [capabilities/inference-time-compute.md](../capabilities/inference-time-compute.md)
 
 ## 与其他轨道的交叉
 
@@ -100,7 +117,26 @@ o3 的实验数据把这个理论具象化了。ARC-AGI 上 o3 high compute（�
 
 ## 信息源
 
-<!-- 待补充 -->
+**奠基论文**
+- [Scaling Laws for Neural Language Models (Kaplan et al., 2020, arXiv 2001.08361)](https://arxiv.org/abs/2001.08361) — 幂律关系的原始发现，建立了 N/D/C 的三元框架
+- [Training Compute-Optimal Large Language Models (Hoffmann et al., 2022, arXiv 2203.15556)](https://arxiv.org/abs/2203.15556) — Chinchilla，修正了最优 N/D 比，是这条轨道最重要的单篇论文
+- [Beyond Chinchilla-Optimal: Accounting for Inference in Language Model Scaling Laws (Sardana & Frankle, 2024, arXiv 2401.00448)](https://arxiv.org/abs/2401.00448) — 将推理成本纳入 scaling 优化目标，理论化了过训练策略的合理性
+
+**推理时 Scaling**
+- [Scaling LLM Test-Time Compute Optimally (Snell et al., UC Berkeley, 2024, arXiv 2408.03314)](https://arxiv.org/abs/2408.03314) — 系统分析推理时计算的最优分配策略，是 o1 时代最重要的理论支撑
+- [Inference Scaling Laws (ICLR 2025)](https://proceedings.iclr.cc/paper_files/paper/2025/file/8c3caae2f725c8e2a55ecd600563d172-Paper-Conference.pdf) — 实证 Best-of-N 和过程验证的对数线性 scaling 曲线
+- [Inference-Time Scaling for Complex Tasks (2025, arXiv 2504.00294)](https://arxiv.org/abs/2504.00294) — 综述推理时 scaling 在不同领域（物理/化学/生物）的收益差异
+
+**MoE Scaling**
+- [Joint MoE Scaling Laws: Mixture of Experts Can Be Memory Efficient (Ludziejewski et al., ICLR 2025, arXiv 2502.05172)](https://arxiv.org/abs/2502.05172) — 280+ 实验建立 MoE 专属的五因子 scaling laws，发现 MoE 比 dense 更内存高效
+
+**行业模型与报告**
+- [DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL (arXiv 2501.12948)](https://arxiv.org/abs/2501.12948) — DeepSeek-R1 训练方法和推理时 scaling 实证数据
+- [DeepSeek-V3 Technical Report (arXiv 2412.19437)](https://arxiv.org/abs/2412.19437) — MoE 架构和训练成本的详细披露
+
+**分析文章**
+- [Scaling Laws for LLMs: From GPT-3 to o3 (Cameron Wolfe, Substack)](https://cameronrwolfe.substack.com/p/llm-scaling-laws) — 清晰的历史叙事，覆盖所有主要转折点
+- [AI companies hit a scaling wall (Platformer)](https://www.platformer.news/openai-google-scaling-laws-anthropic-ai/) — 整理了 Sutskever/Altman/Amodei 的公开立场对比
 
 ## 更新日志
 
@@ -108,3 +144,4 @@ o3 的实验数据把这个理论具象化了。ARC-AGI 上 o3 high compute（�
 - 2026-05-02：填充阶段 1（Kaplan Scaling Laws）和阶段 2（Chinchilla 修正）
 - 2026-05-02：填充阶段 3（过训练与实用主义：Chinchilla 最优 ≠ 部署最优，Llama 1/2/3 的逻辑链）
 - 2026-05-02：填充阶段 4（推理时扩展：test-time compute scaling 曲线、Best-of-N、MCTS、思维预算与成本权衡）
+- 2026-05-02：填充当前技术格局、关键分歧、对能力输出的影响、信息源
