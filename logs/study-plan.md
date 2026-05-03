@@ -1,190 +1,163 @@
 # LLM 学习路径
 
-> 这份文档给出**学习的顺序、节奏和达标标志**，与 [study-tasks.md](study-tasks.md) 配合使用。
+> 这份文档给出**学习的顺序、节奏和达标标志**，与以下两份文档配合使用：
 >
-> - **study-tasks.md**：知识点的微粒清单（80+ 条 task）
-> - **study-plan.md（本文件）**：把这些 task 排进时间和因果链
+> - [study-tasks.md](study-tasks.md)：知识点的微粒清单 — 支撑材料
+> - [notes/](../notes/)：18 篇 blog milestone — **本计划的实际驱动单元**
+> - [removed-from-mainline.md](removed-from-mainline.md)：从主干剔除的内容及理由
 >
-> 起始日期：2026-05-03 ｜ 预期主干完成：2026-08 至 09 ｜ 之后转入持续追踪模式
+> 起始日期：2026-05-03 ｜ 主干完成：2026-09-06 ｜ 之后转入持续追踪模式
+>
+> **2026-05-03 重构**：基于互联网检索 + 落地证据，剔除未真正生产验证的技术，新增 2024-2025 真实落地的关键技术（NSA 稀疏注意力、Hybrid 注意力、Prompt Caching、DAPO、FP8 训练统一、EAGLE-3、R1-Distill 等）。详见各 blog 与剔除日志。
 
 ---
 
 ## 元原则
 
-**学习不是覆盖任务，是打通因果链。** 每个阶段结束时，应该能用一段话讲清楚这个阶段的演进逻辑——不讲细节、讲"为什么"。如果讲不出来，回去补对应 task。
+**主干学习的驱动单元是 notes/ 下的 18 篇 blog，不是 task。** 每篇 blog 覆盖 3-6 个相关 task，强制做综合 — 避免学完 task 后只剩离散要点。完整流程：
 
-**每个 task 完成后必须写入对应的 tracks/ 或 topics/ 文件。** 这是不可跳过的环节。study-tasks.md 是骨架，写入是把因果链用自己的语言固化下来。光看不写，三个月后又会碎片化回去。
+```
+学覆盖的 tasks（4-5 天）
+  → 在 notes/ 下写 blog（2-3 天）
+  → "校验 notes/xxx.md" → Claude 校验事实，我修订
+  → "考核 notes/xxx.md" → Claude 口试评估掌握度
+  → mastered 后回写到 tracks/ 或 topics/
+```
 
-**跳过公式推导，但不跳过直觉。** 不要重新推一遍 DPO 数学化简，但要能说出"DPO 本质上把 RL 问题转化为分类问题，前提是数据离线"。所有 ⭐⭐⭐ task 的目标都是抓直觉，不是推导熟练度。
+详细工作流和 Claude 的两个角色（校验员 / 考官）见 [notes/README.md](../notes/README.md)。
 
-**节奏建议**：每周 3-5 个 task，⭐⭐⭐ 算两个名额。每周末做一次 mini-review——把这周写入的内容和上周做对比，看是否能形成连贯叙事。
+**学习不是覆盖任务，是打通因果链。** 如果一篇 blog 走到 mastered 时还讲不出该阶段的因果链，回去补对应 task。
 
----
+**只学已落地的技术。** 学术热度不等于生产落地。本计划剔除了"看起来很热但没有真实部署证据"的技术（纯 Mamba 数学、MEDUSA、大量 DPO 变体、MCTS 推理、SAE/可解释性、Common Crawl 处理细节等）— 这些归 phase 5 选学或完全剔除。剔除清单见 [removed-from-mainline.md](removed-from-mainline.md)。
 
-## 阶段 0｜地基（1-2 周）
+**跳过公式推导，但不跳过直觉。** 不重新推 DPO 化简、不推 Kaplan 误差源、不推 PPO clip — 但要能说清"DPO 把 RL 转化为分类问题，前提是数据离线"这种 one-liner。所有 ⭐⭐⭐ task 的目标都是抓直觉，不是推导熟练度。
 
-**目的**：建立 Transformer 的基础 mental model。这五件事是后续所有内容的 prerequisite，地基不牢则后面学 RoPE、MLA、RLHF 都是死记硬背。
-
-**任务**：
-- BPE（Byte Pair Encoding）算法 ⭐⭐
-- Self-Attention 机制 ⭐⭐
-- Multi-Head Attention ⭐⭐
-- Transformer 层结构（Pre-LN / FFN / 残差）⭐⭐
-- 自回归语言建模目标 ⭐
-- decoder-only 为什么统治 ⭐
-
-**达标标志**：能用白板向一个不懂 LLM 的同事讲 30 分钟"Transformer 是什么、为什么 work"。具体地：能从零写出 attention 公式并解释每一步的设计理由、能手动模拟 BPE 合并过程、能解释为什么现代模型都是 decoder-only。
-
-**写入位置**：`tracks/architecture.md` 阶段 1 + `topics/attention-mechanism.md`。
+**节奏**：每周一篇，周日 deadline。允许动态调整 — 提前完成可顺延下一篇；累计落后超过 2 周需重新评估覆盖范围。
 
 ---
 
-## 阶段 1｜三条主干轨道（4-6 周，并行推进）
+## 阶段 0｜地基（1 周）
 
-**目的**：理解架构、训练、scaling 三条主干的演进脉络。这三条**必须并行学**，因为它们在 2020-2024 年是相互缠绕演进的——MLA 是 DeepSeek 为了 inference 经济性发明的，理解它需要同时调用架构、scaling、推理三个视角。串行学会丢失这种交叉。
+**核心叙事**：建立 Transformer 的 mental model。这五件事是后续所有内容的 prerequisite，地基不牢则后面学 RoPE、MLA、RLHF 都是死记硬背。
 
-**架构线**（约 8 个 task）：
-- 绝对位置编码的局限 ⭐⭐
-- RoPE（旋转位置编码）⭐⭐⭐
-- 上下文长度外推（YaRN / NTK-aware）⭐⭐
-- Flash Attention ⭐⭐⭐
-- GQA / MQA ⭐⭐
-- MLA（多头潜在注意力）⭐⭐⭐
-- Expert 路由机制 ⭐⭐
-- Auxiliary-loss-free 负载均衡 ⭐⭐⭐
+| # | deadline | blog | 覆盖 task |
+|---|---|---|---|
+| 0 | 2026-05-10 | [transformer-foundation](../notes/2026-05-10-transformer-foundation.md) | BPE, Self-Attention, Multi-Head, Transformer 层结构, AR 目标, decoder-only |
 
-**训练线**（约 6 个 task）：
-- SFT 的数据工程 ⭐⭐
-- 代码数据对推理能力的影响 ⭐⭐
-- RLHF 完整流程 ⭐⭐⭐
-- PPO 算法细节 ⭐⭐⭐
-- DPO 的数学推导 ⭐⭐⭐
-- DPO 变体的动机 ⭐⭐
-
-**Scaling 线**（约 5 个 task）：
-- Kaplan Scaling Laws 详解 ⭐⭐
-- Kaplan 误差来源 ⭐⭐
-- Chinchilla 分析方法 ⭐⭐⭐
-- 推理成本改变最优化目标 ⭐⭐
-- MoE Scaling Laws 的五因子框架 ⭐⭐
-
-**节奏建议**：每周 3 条线各推 1 个 task，避免任何一条停滞超过 1 周。MLA 应该在 Chinchilla + KV Cache 都学完之后再碰，因为它需要"长上下文经济学"的全貌。
-
-**达标标志**：能回答以下问题，每个回答 200-400 字：
-1. 2024 年为什么"过训练"成主流？（涉及 scaling line + 推理成本）
-2. GPT-4 为什么用 MoE 而不继续 scale dense？（涉及 architecture + scaling）
-3. 从 RLHF 到 DPO，工业界为什么愿意切换？（涉及 training line）
-4. RoPE 解决了什么、MLA 解决了什么、它们是同一个问题吗？（涉及 architecture + inference 前奏）
-
-**写入位置**：`tracks/architecture.md`、`tracks/training.md`、`tracks/scaling.md`，对应 topics 同步补充。
+**该阶段达标**：blog 0 通过考核（mastered）。
 
 ---
 
-## 阶段 2｜推理纪元的范式跃迁（3 周）
+## 阶段 1｜三主干并行（7 周）
 
-**目的**：搞透 2024-2025 年最大的范式断裂——从 RLHF 到 RL on verifiable reward。这一阶段最容易"看新闻看个表面"，所以单独成阶段，强迫深入。
+**核心叙事**：架构、训练、scaling 三条主干在 2020-2025 年缠绕演进。**架构这条主干在 2025 出现新分叉**（稠密注意力的极限 → 稀疏 / 线性 / Hybrid 三条新路线落地），所以架构展开为 3 篇而非 2 篇。
 
-**任务**：
-- RLVR 的设计 ⭐⭐
-- GRPO vs PPO ⭐⭐⭐
-- PRM vs ORM ⭐⭐
-- R1-Zero 的涌现 ⭐⭐⭐
-- 推理蒸馏机制 ⭐⭐
-- Inference-time Scaling 机制 ⭐⭐⭐
-- Best-of-N 采样的数学 ⭐⭐
-- Chain-of-Thought 为什么有效 ⭐⭐
-- o1 的技术实质 ⭐⭐⭐
+| # | deadline | blog | 主线 |
+|---|---|---|---|
+| 1 | 2026-05-17 | [position-encoding](../notes/2026-05-17-position-encoding.md) | 架构 |
+| 2 | 2026-05-24 | [attention-engineering](../notes/2026-05-24-attention-engineering.md)（稠密：Flash + GQA + MLA） | 架构 |
+| **3** | 2026-05-31 | [attention-sparse-hybrid](../notes/2026-05-31-attention-sparse-hybrid.md)（**新**：NSA + MoBA + Gated DeltaNet + Hybrid 3:1） | 架构 |
+| 4 | 2026-06-07 | [moe-architecture](../notes/2026-06-07-moe-architecture.md)（强化三家对比 + MTP + Wide EP 引子） | 架构 |
+| 5 | 2026-06-14 | [sft-and-data](../notes/2026-06-14-sft-and-data.md) | 训练 |
+| 6 | 2026-06-21 | [rlhf-to-dpo](../notes/2026-06-21-rlhf-to-dpo.md)（PPO 简化为"为何被淘汰"） | 训练 |
+| 7 | 2026-06-28 | [scaling-laws-trilogy](../notes/2026-06-28-scaling-laws-trilogy.md)(Kaplan 简化为修正史) | scaling |
 
-**达标标志**：写一篇 1500 字左右的内部 memo，标题《从 RLHF 到 R1：训练范式三年演进》。要求：必须解释"为什么 GRPO 能省掉 value model"、"为什么 R1-Zero 的自我反思不是魔法"、"o1 和 GPT-4 + CoT 的本质区别在哪"。这篇 memo 写完后归档到 `topics/rl-for-reasoning.md` 或单独成文。
-
-**写入位置**：`tracks/training.md` 阶段 4、`topics/rl-for-reasoning.md`、`topics/inference-time-compute.md`、`topics/chain-of-thought.md`。同时在 `eras/era4-reasoning.md` 补充叙事线索。
-
----
-
-## 阶段 3｜部署与效率（2-3 周）
-
-**目的**：理解推理侧的工程经济学。不懂 KV Cache 经济学就不理解为什么 MLA 重要、为什么长上下文这么贵——这一阶段是回过头给前面的架构选择补上"为什么这么设计"的答案。
-
-**任务**：
-- KV Cache 工作原理 ⭐⭐
-- PagedAttention 设计 ⭐⭐⭐
-- LLM 量化的核心难点 ⭐⭐
-- AWQ vs GPTQ 对比 ⭐⭐
-- 推测解码的正确性证明 ⭐⭐⭐
-- Prefill vs Decode 瓶颈差异 ⭐⭐
-- 知识蒸馏机制 ⭐⭐
-- 张量并行 / 流水线并行 / ZeRO（基础设施 3 个 task）⭐⭐ ~ ⭐⭐⭐
-- LoRA 的低秩假设 + QLoRA ⭐⭐ × 2
-
-**达标标志**：完成一道账单题——计算 Llama 3 8B 在 32K context、batch=8 时的显存账单（含权重、KV Cache、激活、optimizer state if 训练）。能解释为什么 vLLM 比 naive serving 快 24x。
-
-**写入位置**：`tracks/inference.md`、`topics/kv-cache.md`、`topics/quantization.md`、`topics/speculative-decoding.md`、`topics/lora-peft.md`。
+**该阶段达标**：blog 1-7 全部 mastered，且能用 5 分钟分别串讲四个问题：
+1. 稠密 → 稀疏 / Hybrid 这一步的经济驱动力
+2. 三家 MoE（DeepSeek / Qwen3 / Llama 4）路由选择背后的 tradeoff
+3. 为什么 2024 年过训练成主流
+4. RLHF→DPO 切换的代价与收益（不要求推 PPO clip / DPO 化简）
 
 ---
 
-## 阶段 4｜历史叙事 + 能力归因（2 周）
+## 阶段 2｜推理纪元（3 周）
 
-**目的**：到这一步，零件已齐。这两周不学新东西，用 `eras/` 和 `capabilities/` 把零件串起来。这是验证理解的阶段——如果发现某个能力归因写不出来，回去补对应 task。
+**核心叙事**：2024-2025 最大的范式断裂 — 从 RLHF 到 RL on verifiable reward，且 2025 年裂出**三条产品路线**（OpenAI dedicated / Anthropic hybrid / DeepSeek 开源蒸馏）。这一阶段最容易"看新闻看个表面"，所以单独成阶段，强迫深入。
 
-**做法**：
-1. **能力归因**：逐个 review `capabilities/` 下的 7 个文件（reasoning、long-context、multimodality、tool-use、instruction-following、memory、inference-time-compute），每个能力都用一句话回答"它的当前水位是被哪些 tracks 的哪些技术推动的"，把答案补进 capabilities 文件的"技术归因"小节。
-2. **范式叙事**：逐个 review `eras/` 下的 5 个文件，确认每个纪元的"主导叙事 → 关键事件 → 范式替代"链条能不能讲通。讲不通的地方，去 `logs/paradigm-shifts.md` 补一条。
-3. **labs 视角**：把 `labs/` 下 6 个实验室的"关键决策与赌注"过一遍，对比同一个技术问题（如 MoE vs Dense、RLHF vs DPO、是否做 reasoning 模型）各家的不同选择和结果。
+| # | deadline | blog |
+|---|---|---|
+| 8 | 2026-07-05 | [rlvr-grpo](../notes/2026-07-05-rlvr-grpo.md)（**加 DAPO 四项修正**） |
+| 9 | 2026-07-12 | [reasoning-paradigm-split](../notes/2026-07-12-reasoning-paradigm-split.md)（**改名**：三家路线对比，不再是 R1+o1 二元） |
+| 10 | 2026-07-19 | [inference-time-scaling](../notes/2026-07-19-inference-time-scaling.md)（MCTS 降级，重点 long-CoT 内化） |
 
-**还需要补的几个 task**：
-- GPT-3 Few-Shot 涌现 ⭐⭐
-- InstructGPT 1.3B > GPT-3 175B ⭐⭐
-- DeepSeek-R1-Zero 的意义 ⭐⭐⭐
-- 涌现能力争论（Schaeffer et al.）⭐⭐⭐
+**该阶段达标**：blog 8-10 全部 mastered。第 10 篇通过后，能用 1500 字写完《从 RLHF 到三家分叉：训练范式三年演进》memo，归档到 `topics/rl-for-reasoning.md`。
 
-**达标标志**：能在 1 小时内向一位资深 ML 工程师做完整 takeaway——"LLM 五年演进的四个纪元、每个纪元的主导矛盾、每个矛盾如何被下一个纪元的技术解决（或转化）"。
+---
+
+## 阶段 3｜部署与效率（5 周）
+
+**核心叙事**：推理与训练的工程经济学，回过头补"前面架构选择为什么这么设计"的答案。不懂 KV Cache 经济学就不理解为什么 MLA 重要、为什么长上下文这么贵、为什么 Prompt Caching 是商业一等公民。
+
+| # | deadline | blog |
+|---|---|---|
+| 11 | 2026-07-26 | [kv-cache-economics](../notes/2026-07-26-kv-cache-economics.md)（**加 Prompt Caching + RULER 长上下文真实退化**） |
+| 12 | 2026-08-02 | [quantization-landscape](../notes/2026-08-02-quantization-landscape.md)（**FP8 升为主线**） |
+| 13 | 2026-08-09 | [speculative-decoding-distillation](../notes/2026-08-09-speculative-decoding-distillation.md)（**EAGLE-3 + R1-Distill + On-Policy**） |
+| 14 | 2026-08-16 | [parallelism](../notes/2026-08-16-parallelism.md)（**加 Wide Expert Parallel**） |
+| 15 | 2026-08-23 | [lora-peft](../notes/2026-08-23-lora-peft.md) |
+
+**该阶段达标**：blog 11-15 全部 mastered，且能完成两道账单题：
+1. Llama 3 8B 在 32K context、batch=8 时的显存账单（含权重、KV Cache、激活、optimizer state if 训练）
+2. 一个 system prompt 长 5000 token、用户消息平均 200 token 的 agent 应用，启用 Anthropic Prompt Caching 后单次请求成本曲线（cache hit / miss 两种情况）
+
+并能解释 vLLM 比 naive serving 快 24× 的原因 + EAGLE-3 在 vLLM 默认的工程动机。
+
+---
+
+## 阶段 4｜历史叙事综合（2 周）
+
+**核心叙事**：到这一步零件已齐。这两周不学新东西，把零件串成完整故事。这是验证理解的阶段 — 如果某个能力归因写不出来，回去补对应 task。
+
+| # | deadline | blog |
+|---|---|---|
+| 16 | 2026-08-30 | [early-eras-emergence-and-alignment](../notes/2026-08-30-early-eras-emergence-and-alignment.md) |
+| 17 | 2026-09-06 | [synthesis-five-years](../notes/2026-09-06-synthesis-five-years.md)（**加入两条范式分叉作为高潮**） |
+
+**该阶段达标**：blog 17 通过考核。考核形式升级 — 不仅口试，做一次完整 60 分钟口述演练并录音，回听找漏洞。综合叙事必须能讲清两条分叉（架构分叉 + 推理产品分叉）的因果。
+
+**配套动作（穿插在这两周）**：
+1. **能力归因**：逐个 review `capabilities/` 下 7 个文件，每个能力都用一句话回答"它的当前水位是被哪些 tracks 的哪些技术推动的"，补进 capabilities 文件的"技术归因"小节
+2. **范式叙事**：逐个 review `eras/` 下 5 个文件，确认每个纪元的"主导叙事 → 关键事件 → 范式替代"链条能讲通；讲不通的去 `logs/paradigm-shifts.md` 补一条
+3. **labs 视角**：把 `labs/` 下 6 个实验室的"关键决策与赌注"过一遍，对比同一个技术问题各家的不同选择
 
 ---
 
 ## 阶段 5｜持续追踪（无止境）
 
-**目的**：主干已通，剩下的内容按兴趣和领域热度挑着学，不强求覆盖。
+主干完成后，study-tasks.md 中剩余 task 按兴趣和领域热度挑着学，不强求覆盖。**这里只列"剔除主干、转 phase 5 选学"的部分** — 不是没价值，是不达"已落地且影响生产"标准：
 
-**topics 池**（剩余 task，按推荐优先级）：
+- **架构前沿（学术活跃）**：纯 Mamba / SSD 数学、Hybrid 设计原则深入（落地形态在 blog 3 已覆盖）
+- **对齐与安全**：Reward Hacking、谄媚问题、对齐税及缓解、推理链可信度、Scalable Oversight
+- **多模态**：CLIP 与对比学习、ViT、多模态接合架构、视觉语言模型架构
+- **RAG 与评估**：RAG 架构、Embedding 模型、RAG vs Long Context、Lost in the Middle、Benchmark 设计、数据污染、评估 Goodhart
+- **可解释性**：超位置假说、稀疏自编码器 SAE、Activation Steering（Anthropic 在用，但不是产品 feature）
+- **数据深度**：Common Crawl 处理、MinHash 去重、ML 分类器质量过滤、合成数据生成方法、Model Collapse 数学、数据混合比例
+- **DPO 变体生态**：KTO / IPO / SimPO / ORPO（生产仍以 DPO + 偏好对为主，变体作为索引知道存在即可）
+- **PEFT 其他方法**：Adapter / Prefix Tuning / Prompt Tuning（LoRA / QLoRA 已是事实标准）
+- **Agentic 训练**：Computer Use、Browser Use、Operator — **这条 2025 热度被低估**，做 Agent 项目时优先回看
+- **FFN 高阶**：FFN 作为键值记忆（研究框架，无生产指导）
 
-**对齐与安全**（如果工作涉及对齐评估）：
-- Reward Hacking ⭐⭐、谄媚问题 ⭐⭐、对齐税及缓解 ⭐⭐、推理链可信度 ⭐⭐⭐、Scalable Oversight ⭐⭐⭐
-
-**多模态**（如果工作涉及 VLM）：
-- CLIP 与对比学习 ⭐⭐、ViT ⭐⭐、多模态接合架构 ⭐⭐、视觉语言模型架构 ⭐⭐
-
-**RAG 与评估**（工程相关性高）：
-- RAG 架构 ⭐⭐、Embedding 模型 ⭐⭐、RAG vs Long Context ⭐⭐、Lost in the Middle ⭐⭐、Benchmark 设计 ⭐⭐、数据污染 ⭐⭐、评估 Goodhart ⭐⭐
-
-**前沿架构**（关注度高，落地有限）：
-- Mamba 选择性 SSM ⭐⭐⭐、Mamba-2 / SSD ⭐⭐⭐、Hybrid 架构原则 ⭐⭐
-
-**可解释性**（前沿研究）：
-- 超位置假说 ⭐⭐⭐、稀疏自编码器 SAE ⭐⭐、Activation Steering ⭐⭐
-
-**数据深度**：
-- Common Crawl 处理 ⭐、MinHash 去重 ⭐⭐、ML 分类器质量过滤 ⭐⭐、合成数据生成方法 ⭐⭐、Model Collapse ⭐⭐⭐、数据混合比例 ⭐⭐
-
-**FFN 高阶**：FFN 作为键值记忆 ⭐⭐⭐
-
-**节奏建议**：每月 2-4 个 task，配合阅读最新论文和模型发布。从这个阶段开始，study-tasks.md 不再是主要驱动，**新进展归档（`logs/new-arrivals.md` → 体系吸收）成为主线**。
+**节奏**：每月 2-4 个 task，配合阅读最新论文和模型发布。这个阶段开始，**新进展归档**（`logs/new-arrivals.md` → 体系吸收）成为主线。仍可按需创建 notes/ blog，但不再有固定 deadline。
 
 ---
 
-## 进度追踪建议
+## 进度追踪
 
-每周末花 30 分钟做 mini-review：
-1. 这周完成了哪些 task？写入了哪些文件？
-2. 这周的内容能否和上周连成一段叙事？连不上的地方是什么？
-3. 下周的 3-5 个 task 是哪些？
+每周末 30 分钟 mini-review：
+1. 本周 blog 走到了哪个状态（drafted / verified / mastered）？卡在哪一步？
+2. 下周 blog 的覆盖 task 列表过一遍，估算需要时间
+3. 落后超 1 周：分析原因（覆盖太广 / 个人时间 / 概念太难），及时调整
 
-每个阶段结束做一次 deep review：
-1. 该阶段的"达标标志"是否真的达到？没达到的部分继续补。
-2. 在 `logs/paradigm-shifts.md` 检查是否漏记了重要的范式替代。
-3. 看 `logs/open-questions.md`——这一阶段是否解答了某些旧问题、产生了哪些新问题。
+每个阶段结束 deep review：
+1. 该阶段所有 blog 是否 mastered？没 mastered 的优先补
+2. `logs/paradigm-shifts.md` 是否漏记了重要的范式替代
+3. `logs/open-questions.md` — 这一阶段解答了哪些旧问题、产生了哪些新问题
 
 ---
 
 ## 更新日志
 
 - 2026-05-03：初版，五阶段路径 + 节奏建议
+- 2026-05-03：新增 notes/ blog 工作流（task → notes → 校验 → 回写）
+- 2026-05-03：重构为 note-driven，17 篇 blog 作为驱动单元，新增"考官"角色
+- 2026-05-03：基于互联网检索 + 落地证据二次重构 — 17 → 18 篇，主干完成日 08-30 → 09-06 顺延一周；拆 attention-engineering 为稠密 + 稀疏/Hybrid 两篇；blog 9 改名 reasoning-paradigm-split 覆盖三家分叉；blog 11-14 各加 2025 落地新内容（Prompt Caching、FP8 主线、EAGLE-3、Wide EP）；剔除清单单独维护在 removed-from-mainline.md

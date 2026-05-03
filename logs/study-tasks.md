@@ -6,6 +6,14 @@
 > - **[x]** = 已完成（完成后在 tracks/ 或 topics/ 对应位置补充细节）
 > - **锚点** = 指向现有体系位置
 > - 难度：⭐ 基础 / ⭐⭐ 进阶 / ⭐⭐⭐ 需要推导
+>
+> ## 2026-05-03 重构后阅读说明
+>
+> 本清单是 task 池，不再是学习驱动。**实际学习按 [study-plan.md](study-plan.md) 的 18 篇 blog 走** — blog 已经吸收了 task 并加上了 2025 新落地内容。
+>
+> - **进入主干 18 篇 blog 的 task**：直接通过 blog 学习，本清单作为参考
+> - **被降级到 phase 5 / 完全剔除的 task**：见 [removed-from-mainline.md](removed-from-mainline.md)。本文件中**未单独标记剔除**，避免大规模改动出错；以剔除日志为准
+> - **2026-05-03 新增的 task**：见本文件底部"重构新增 tasks"段
 
 ---
 
@@ -460,3 +468,85 @@
 - [ ] **⭐⭐ SwiGLU 激活函数**：从 ReLU → GELU → SwiGLU 的演进、为什么 GLU 变体在 LLM 中更好
   - 目标：理解 gating mechanism 如何改善 FFN 的表达能力
   - 锚点：`tracks/architecture.md`（隐含组件）
+
+---
+
+## 2026-05-03 重构新增 tasks
+
+基于互联网检索 + 落地证据，新增 2024-2025 真实落地的关键 task。这些 task 已分散吸收到主干 18 篇 blog 中（见每条的"进入 blog #X"标注）。
+
+### 架构（稀疏 / 线性 / Hybrid）
+
+- [ ] **⭐⭐⭐ NSA（Native Sparse Attention）**：DeepSeek 2025-02 的三路稀疏（压缩 + 选择 + 滑动窗口），原生可训练
+  - 目标：解释"原生可训练"相对早期 Longformer/BigBird"事后近似"的本质区别
+  - 锚点：进入 blog 3 [attention-sparse-hybrid](../notes/2026-05-31-attention-sparse-hybrid.md)
+  - 落地：DeepSeek V3.2-Exp（2025-09）
+
+- [ ] **⭐⭐ MoBA（Mixture of Block Attention）**：Moonshot 2025-02，块级稀疏路由
+  - 目标：与 NSA 对比，理解两条独立稀疏路线
+  - 锚点：blog 3
+
+- [ ] **⭐⭐⭐ Gated DeltaNet（线性注意力）**：Qwen3-Next 用的线性算子，源自 Gated Delta Networks
+  - 目标：与纯 Mamba SSM 区分（delta rule + gating，不是状态空间）
+  - 锚点：blog 3
+  - 落地：Qwen3-Next 80B-A3B（vLLM 原生支持）
+
+- [ ] **⭐⭐ Hybrid 3:1 注意力比例**：Qwen3-Next / Nemotron-H 共同选择的"3 层线性 + 1 层 full"模式
+  - 目标：理解这个比例为什么是工程甜点
+  - 锚点：blog 3
+
+### MoE 工程
+
+- [ ] **⭐⭐ 三家 MoE 路由对比**：DeepSeek（1 共享 + 8/256）vs Qwen3（top-8/128 无共享）vs Llama 4（1+1）
+  - 目标：理解共享专家的必要性争论 + 各家稀疏度选择背后的服务约束
+  - 锚点：blog 4 [moe-architecture](../notes/2026-06-07-moe-architecture.md)
+
+- [ ] **⭐⭐ Multi-Token Prediction（MTP）**：训练时多 token 预测 + 推理时天然兼容推测解码
+  - 目标：理解为什么这个机制同时改善训练 sample efficiency 和推理 latency
+  - 锚点：blog 4
+  - 落地：Qwen3-Next 等
+
+- [ ] **⭐⭐⭐ Wide Expert Parallel**：vLLM + llm-d 的 256 专家分片服务
+  - 目标：理解 EP 的 all-to-all 通信模式与 TP 的本质区别
+  - 锚点：blog 4 + blog 14 [parallelism](../notes/2026-08-16-parallelism.md)
+
+### Reasoning RL
+
+- [ ] **⭐⭐⭐ DAPO 四项修正**：Clip-Higher / Dynamic Sampling / Token-level PG Loss / Overlong Reward Shaping
+  - 目标：每一项对应解决 GRPO 在 long-CoT 训练中的哪个具体失败模式
+  - 锚点：blog 8 [rlvr-grpo](../notes/2026-07-05-rlvr-grpo.md)
+  - 落地：ByteDance/Tsinghua 2025
+
+- [ ] **⭐⭐⭐ 推理范式三家分叉**：OpenAI dedicated reasoning model / Anthropic hybrid thinking / DeepSeek 开源蒸馏
+  - 目标：能解释三家产品哲学差异 + 各自技术取舍
+  - 锚点：blog 9 [reasoning-paradigm-split](../notes/2026-07-12-reasoning-paradigm-split.md)
+
+- [ ] **⭐⭐ Anthropic Hybrid Thinking 设计**：thinking budget 参数 + 一个模型双 mode
+  - 目标：理解为什么 Anthropic 选这条路而非分裂模型
+  - 锚点：blog 9
+
+- [ ] **⭐⭐ On-Policy Distillation**：Thinking Machines 2025，解决静态蒸馏的分布漂移
+  - 目标：与 GRPO（用 verifier）的边界
+  - 锚点：blog 13 [speculative-decoding-distillation](../notes/2026-08-09-speculative-decoding-distillation.md)
+
+### 推理服务（KV / 长上下文 / 推测解码）
+
+- [ ] **⭐⭐ Prompt Caching（跨请求 KV 复用）**：Anthropic 显式 cache_control（5min/1h TTL）vs OpenAI 隐式自动
+  - 目标：理解两种设计哲学差异 + 对长 system prompt 应用的成本曲线影响
+  - 锚点：blog 11 [kv-cache-economics](../notes/2026-07-26-kv-cache-economics.md)
+
+- [ ] **⭐⭐⭐ RULER vs NIAH 长上下文真实退化**：四类任务（multi-needle / multi-hop / aggregation / QA）
+  - 目标：解释为什么 1M context 在 RULER 上 50K-130K 就显著掉
+  - 锚点：blog 11
+  - 落地：NVIDIA RULER 已成事实标准
+
+- [ ] **⭐⭐⭐ EAGLE-3 推测解码**：draft head 直接 attach 到 target，多层 feature reuse
+  - 目标：理解为什么 EAGLE-3 赢过 MEDUSA 成为 vLLM/SGLang/TensorRT-LLM 默认
+  - 锚点：blog 13
+
+### 训练精度
+
+- [ ] **⭐⭐⭐ FP8 作为训练+推理统一精度**：DeepSeek V3 首次大规模 FP8 训练成功 + Qwen 3.5 native FP8 pipeline
+  - 目标：解释 E4M3 vs E5M2 两种格式的定位 + 为什么 FP8 能挑战 BF16 在训练中的地位
+  - 锚点：blog 12 [quantization-landscape](../notes/2026-08-02-quantization-landscape.md)
+
