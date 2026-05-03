@@ -219,12 +219,32 @@
   - 目标：解释为什么 PagedAttention + 连续批处理能实现 24x 吞吐提升
   - 锚点：`topics/kv-cache.md`
 
+- [ ] **⭐ 精度类型体系**：FP32 → FP16 → BF16 → FP8 → INT8 → INT4 各自的数值范围、精度、适用场景
+  - 目标：说清楚 BF16 为什么在训练中取代 FP16（指数位 vs 尾数位的权衡）、FP8 的两种格式（E4M3 vs E5M2）各自定位
+  - 锚点：`topics/quantization.md`
+
+- [ ] **⭐ PTQ vs QAT 的选择逻辑**：训练后量化 vs 量化感知训练的适用边界
+  - 目标：解释为什么超大 LLM（>70B）几乎只能用 PTQ，QAT 在什么规模和场景下仍有价值
+  - 锚点：`topics/quantization.md`
+
 - [ ] **⭐⭐ LLM 量化的核心难点**：异常值分布问题、为什么 LLM 比 CNN 更难量化
-  - 目标：理解 GPTQ 用 Hessian 近似识别重要权重的直觉
+  - 目标：理解异常值的分布特征（集中在特定 channel）以及它如何拉垮整体量化精度
   - 锚点：`tracks/inference.md` 阶段 2 → `topics/quantization.md`
 
 - [ ] **⭐⭐ AWQ vs GPTQ 对比**：两者识别"重要权重"的不同方法
-  - 目标：理解"1% 显著权重"假说的证据和局限
+  - 目标：GPTQ 用 Hessian 逆做逐列补偿 vs AWQ 用激活幅度找 1% 显著权重——理解两种思路的直觉和局限
+  - 锚点：`topics/quantization.md`
+
+- [ ] **⭐⭐ SmoothQuant 的难度转移思想**：激活量化为什么比权重量化更难、如何在权重和激活之间"搬运"量化难度
+  - 目标：理解 per-channel scaling 如何把激活中的异常值转移到权重上（权重是静态的，更容易处理）
+  - 锚点：`topics/quantization.md`
+
+- [ ] **⭐⭐ GGUF 混合精度与边缘部署**：Q4_K_M 等格式的设计直觉、不同层用不同精度的策略
+  - 目标：理解 llama.cpp 量化方案如何在 CPU 上实现可用推理（SIMD 优化、内存映射）
+  - 锚点：`topics/quantization.md`
+
+- [ ] **⭐ FP8 与下一代硬件原生支持**：H100/B200 的 FP8 Tensor Core 如何改变量化格局
+  - 目标：理解 FP8 作为"训练+推理统一精度"的定位——不是极限压缩，而是硬件原生的效率甜点
   - 锚点：`topics/quantization.md`
 
 - [ ] **⭐⭐⭐ 推测解码的正确性证明**：rejection sampling 如何保证输出分布不变
