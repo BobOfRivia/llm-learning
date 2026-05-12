@@ -1,6 +1,6 @@
 # Transformer 地基
 
-> deadline: 2026-05-10
+> deadline: 2026-05-17
 > status: pending
 > 覆盖 tasks: BPE 算法、Self-Attention 机制、Multi-Head Attention、Transformer 层结构（Pre-LN / FFN / 残差）、自回归语言建模目标、decoder-only 为什么统治
 > 桥接: tracks/architecture.md 阶段 1, topics/attention-mechanism.md

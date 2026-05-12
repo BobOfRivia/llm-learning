@@ -6,7 +6,7 @@
 > - [notes/](../notes/)：18 篇 blog milestone — **本计划的实际驱动单元**
 > - [removed-from-mainline.md](removed-from-mainline.md)：从主干剔除的内容及理由
 >
-> 起始日期：2026-05-03 ｜ 主干完成：2026-09-06 ｜ 之后转入持续追踪模式
+> 起始日期：2026-05-03 ｜ 主干完成：2026-09-13 ｜ 之后转入持续追踪模式
 >
 > **2026-05-03 重构**：基于互联网检索 + 落地证据，剔除未真正生产验证的技术，新增 2024-2025 真实落地的关键技术（NSA 稀疏注意力、Hybrid 注意力、Prompt Caching、DAPO、FP8 训练统一、EAGLE-3、R1-Distill 等）。详见各 blog 与剔除日志。
 
@@ -42,7 +42,7 @@
 
 | # | deadline | blog | 覆盖 task |
 |---|---|---|---|
-| 0 | 2026-05-10 | [transformer-foundation](../notes/2026-05-10-transformer-foundation.md) | BPE, Self-Attention, Multi-Head, Transformer 层结构, AR 目标, decoder-only |
+| 0 | 2026-05-17 | [transformer-foundation](../notes/2026-05-17-transformer-foundation.md) | BPE, Self-Attention, Multi-Head, Transformer 层结构, AR 目标, decoder-only |
 
 **该阶段达标**：blog 0 通过考核（mastered）。
 
@@ -54,13 +54,13 @@
 
 | # | deadline | blog | 主线 |
 |---|---|---|---|
-| 1 | 2026-05-17 | [position-encoding](../notes/2026-05-17-position-encoding.md) | 架构 |
-| 2 | 2026-05-24 | [attention-engineering](../notes/2026-05-24-attention-engineering.md)（稠密：Flash + GQA + MLA） | 架构 |
-| **3** | 2026-05-31 | [attention-sparse-hybrid](../notes/2026-05-31-attention-sparse-hybrid.md)（**新**：NSA + MoBA + Gated DeltaNet + Hybrid 3:1） | 架构 |
-| 4 | 2026-06-07 | [moe-architecture](../notes/2026-06-07-moe-architecture.md)（强化三家对比 + MTP + Wide EP 引子） | 架构 |
-| 5 | 2026-06-14 | [sft-and-data](../notes/2026-06-14-sft-and-data.md) | 训练 |
-| 6 | 2026-06-21 | [rlhf-to-dpo](../notes/2026-06-21-rlhf-to-dpo.md)（PPO 简化为"为何被淘汰"） | 训练 |
-| 7 | 2026-06-28 | [scaling-laws-trilogy](../notes/2026-06-28-scaling-laws-trilogy.md)(Kaplan 简化为修正史) | scaling |
+| 1 | 2026-05-24 | [position-encoding](../notes/2026-05-24-position-encoding.md) | 架构 |
+| 2 | 2026-05-31 | [attention-engineering](../notes/2026-05-31-attention-engineering.md)（稠密：Flash + GQA + MLA） | 架构 |
+| **3** | 2026-06-07 | [attention-sparse-hybrid](../notes/2026-06-07-attention-sparse-hybrid.md)（**新**：NSA + MoBA + Gated DeltaNet + Hybrid 3:1） | 架构 |
+| 4 | 2026-06-14 | [moe-architecture](../notes/2026-06-14-moe-architecture.md)（强化三家对比 + MTP + Wide EP 引子） | 架构 |
+| 5 | 2026-06-21 | [sft-and-data](../notes/2026-06-21-sft-and-data.md) | 训练 |
+| 6 | 2026-06-28 | [rlhf-to-dpo](../notes/2026-06-28-rlhf-to-dpo.md)（PPO 简化为"为何被淘汰"） | 训练 |
+| 7 | 2026-07-05 | [scaling-laws-trilogy](../notes/2026-07-05-scaling-laws-trilogy.md)(Kaplan 简化为修正史) | scaling |
 
 **该阶段达标**：blog 1-7 全部 mastered，且能用 5 分钟分别串讲四个问题：
 1. 稠密 → 稀疏 / Hybrid 这一步的经济驱动力
@@ -76,9 +76,9 @@
 
 | # | deadline | blog |
 |---|---|---|
-| 8 | 2026-07-05 | [rlvr-grpo](../notes/2026-07-05-rlvr-grpo.md)（**加 DAPO 四项修正**） |
-| 9 | 2026-07-12 | [reasoning-paradigm-split](../notes/2026-07-12-reasoning-paradigm-split.md)（**改名**：三家路线对比，不再是 R1+o1 二元） |
-| 10 | 2026-07-19 | [inference-time-scaling](../notes/2026-07-19-inference-time-scaling.md)（MCTS 降级，重点 long-CoT 内化） |
+| 8 | 2026-07-12 | [rlvr-grpo](../notes/2026-07-12-rlvr-grpo.md)（**加 DAPO 四项修正**） |
+| 9 | 2026-07-19 | [reasoning-paradigm-split](../notes/2026-07-19-reasoning-paradigm-split.md)（**改名**：三家路线对比，不再是 R1+o1 二元） |
+| 10 | 2026-07-26 | [inference-time-scaling](../notes/2026-07-26-inference-time-scaling.md)（MCTS 降级，重点 long-CoT 内化） |
 
 **该阶段达标**：blog 8-10 全部 mastered。第 10 篇通过后，能用 1500 字写完《从 RLHF 到三家分叉：训练范式三年演进》memo，归档到 `topics/rl-for-reasoning.md`。
 
@@ -90,11 +90,11 @@
 
 | # | deadline | blog |
 |---|---|---|
-| 11 | 2026-07-26 | [kv-cache-economics](../notes/2026-07-26-kv-cache-economics.md)（**加 Prompt Caching + RULER 长上下文真实退化**） |
-| 12 | 2026-08-02 | [quantization-landscape](../notes/2026-08-02-quantization-landscape.md)（**FP8 升为主线**） |
-| 13 | 2026-08-09 | [speculative-decoding-distillation](../notes/2026-08-09-speculative-decoding-distillation.md)（**EAGLE-3 + R1-Distill + On-Policy**） |
-| 14 | 2026-08-16 | [parallelism](../notes/2026-08-16-parallelism.md)（**加 Wide Expert Parallel**） |
-| 15 | 2026-08-23 | [lora-peft](../notes/2026-08-23-lora-peft.md) |
+| 11 | 2026-08-02 | [kv-cache-economics](../notes/2026-08-02-kv-cache-economics.md)（**加 Prompt Caching + RULER 长上下文真实退化**） |
+| 12 | 2026-08-09 | [quantization-landscape](../notes/2026-08-09-quantization-landscape.md)（**FP8 升为主线**） |
+| 13 | 2026-08-16 | [speculative-decoding-distillation](../notes/2026-08-16-speculative-decoding-distillation.md)（**EAGLE-3 + R1-Distill + On-Policy**） |
+| 14 | 2026-08-23 | [parallelism](../notes/2026-08-23-parallelism.md)（**加 Wide Expert Parallel**） |
+| 15 | 2026-08-30 | [lora-peft](../notes/2026-08-30-lora-peft.md) |
 
 **该阶段达标**：blog 11-15 全部 mastered，且能完成两道账单题：
 1. Llama 3 8B 在 32K context、batch=8 时的显存账单（含权重、KV Cache、激活、optimizer state if 训练）
@@ -110,8 +110,8 @@
 
 | # | deadline | blog |
 |---|---|---|
-| 16 | 2026-08-30 | [early-eras-emergence-and-alignment](../notes/2026-08-30-early-eras-emergence-and-alignment.md) |
-| 17 | 2026-09-06 | [synthesis-five-years](../notes/2026-09-06-synthesis-five-years.md)（**加入两条范式分叉作为高潮**） |
+| 16 | 2026-09-06 | [early-eras-emergence-and-alignment](../notes/2026-09-06-early-eras-emergence-and-alignment.md) |
+| 17 | 2026-09-13 | [synthesis-five-years](../notes/2026-09-13-synthesis-five-years.md)（**加入两条范式分叉作为高潮**） |
 
 **该阶段达标**：blog 17 通过考核。考核形式升级 — 不仅口试，做一次完整 60 分钟口述演练并录音，回听找漏洞。综合叙事必须能讲清两条分叉（架构分叉 + 推理产品分叉）的因果。
 
@@ -161,3 +161,4 @@
 - 2026-05-03：新增 notes/ blog 工作流（task → notes → 校验 → 回写）
 - 2026-05-03：重构为 note-driven，17 篇 blog 作为驱动单元，新增"考官"角色
 - 2026-05-03：基于互联网检索 + 落地证据二次重构 — 17 → 18 篇，主干完成日 08-30 → 09-06 顺延一周；拆 attention-engineering 为稠密 + 稀疏/Hybrid 两篇；blog 9 改名 reasoning-paradigm-split 覆盖三家分叉；blog 11-14 各加 2025 落地新内容（Prompt Caching、FP8 主线、EAGLE-3、Wide EP）；剔除清单单独维护在 removed-from-mainline.md
+- 2026-05-12：blog 0 deadline 已过 2 天仍 pending，整体平移一周 — 全部 18 篇 deadline +7 天，主干完成日 09-06 → 09-13；文件重命名 + frontmatter deadline 同步更新

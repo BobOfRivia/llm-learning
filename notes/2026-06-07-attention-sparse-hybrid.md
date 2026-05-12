@@ -1,10 +1,10 @@
 # 稀疏、线性、Hybrid Attention
 
-> deadline: 2026-05-31
+> deadline: 2026-06-07
 > status: pending
 > 覆盖 tasks: NSA（Native Sparse Attention）、MoBA（Mixture of Block Attention）、Gated DeltaNet（线性注意力）、Hybrid 3:1 模式（Qwen3-Next / Nemotron-H）
 > 桥接: tracks/architecture.md, topics/attention-mechanism.md（待新增 sparse-attention 小节）
-> 前序: blog 2 [attention-engineering](2026-05-24-attention-engineering.md) 处理稠密路线（Flash / GQA / MLA）
+> 前序: blog 2 [attention-engineering](2026-05-31-attention-engineering.md) 处理稠密路线（Flash / GQA / MLA）
 
 **核心问题**：当稠密 Attention 把能压缩的都压完之后（GQA 砍头数、MLA 砍秩），下一步必然走向"减少要算的 token 对"或"用线性算子近似 softmax"。2025 年这两条路都真实落地了 — DeepSeek V3.2-Exp 上的 NSA、Moonshot 的 MoBA 是稀疏路线；Qwen3-Next 80B-A3B 与 NVIDIA Nemotron-H/Nano 2 的 Gated DeltaNet + Full Attention 3:1 交替是 Hybrid 路线。要能解释清楚四件事：
 

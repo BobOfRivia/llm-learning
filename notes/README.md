@@ -61,28 +61,28 @@ pending → drafted → verified → mastered
 
 ## 节奏总览
 
-主干 18 篇 × 1 周/篇，从 2026-05-03 起，到 2026-09-06 结束。每周日是 deadline。允许动态调整：超前完成可以提前下一篇；落后可以延期，但累计落后超过 2 周需要重新评估覆盖范围。
+主干 18 篇 × 1 周/篇，从 2026-05-03 起，到 2026-09-13 结束（2026-05-12 整体平移一周）。每周日是 deadline。允许动态调整：超前完成可以提前下一篇；落后可以延期，但累计落后超过 2 周需要重新评估覆盖范围。
 
 | # | deadline | blog | 阶段 |
 |---|---|---|---|
-| 0 | 2026-05-10 | [transformer-foundation](2026-05-10-transformer-foundation.md) | 0 地基 |
-| 1 | 2026-05-17 | [position-encoding](2026-05-17-position-encoding.md) | 1 三主干 |
-| 2 | 2026-05-24 | [attention-engineering](2026-05-24-attention-engineering.md)（稠密） | 1 三主干 |
-| 3 | 2026-05-31 | [attention-sparse-hybrid](2026-05-31-attention-sparse-hybrid.md)（稀疏 / Hybrid） | 1 三主干 |
-| 4 | 2026-06-07 | [moe-architecture](2026-06-07-moe-architecture.md) | 1 三主干 |
-| 5 | 2026-06-14 | [sft-and-data](2026-06-14-sft-and-data.md) | 1 三主干 |
-| 6 | 2026-06-21 | [rlhf-to-dpo](2026-06-21-rlhf-to-dpo.md) | 1 三主干 |
-| 7 | 2026-06-28 | [scaling-laws-trilogy](2026-06-28-scaling-laws-trilogy.md) | 1 三主干 |
-| 8 | 2026-07-05 | [rlvr-grpo](2026-07-05-rlvr-grpo.md)（含 DAPO） | 2 推理纪元 |
-| 9 | 2026-07-12 | [reasoning-paradigm-split](2026-07-12-reasoning-paradigm-split.md)（三家分叉） | 2 推理纪元 |
-| 10 | 2026-07-19 | [inference-time-scaling](2026-07-19-inference-time-scaling.md) | 2 推理纪元 |
-| 11 | 2026-07-26 | [kv-cache-economics](2026-07-26-kv-cache-economics.md)（含 Prompt Caching + RULER） | 3 部署效率 |
-| 12 | 2026-08-02 | [quantization-landscape](2026-08-02-quantization-landscape.md)（FP8 主线） | 3 部署效率 |
-| 13 | 2026-08-09 | [speculative-decoding-distillation](2026-08-09-speculative-decoding-distillation.md)（EAGLE-3 + R1-Distill） | 3 部署效率 |
-| 14 | 2026-08-16 | [parallelism](2026-08-16-parallelism.md)（含 Wide EP） | 3 部署效率 |
-| 15 | 2026-08-23 | [lora-peft](2026-08-23-lora-peft.md) | 3 部署效率 |
-| 16 | 2026-08-30 | [early-eras-emergence-and-alignment](2026-08-30-early-eras-emergence-and-alignment.md) | 4 综合 |
-| 17 | 2026-09-06 | [synthesis-five-years](2026-09-06-synthesis-five-years.md) | 4 综合 |
+| 0 | 2026-05-17 | [transformer-foundation](2026-05-17-transformer-foundation.md) | 0 地基 |
+| 1 | 2026-05-24 | [position-encoding](2026-05-24-position-encoding.md) | 1 三主干 |
+| 2 | 2026-05-31 | [attention-engineering](2026-05-31-attention-engineering.md)（稠密） | 1 三主干 |
+| 3 | 2026-06-07 | [attention-sparse-hybrid](2026-06-07-attention-sparse-hybrid.md)（稀疏 / Hybrid） | 1 三主干 |
+| 4 | 2026-06-14 | [moe-architecture](2026-06-14-moe-architecture.md) | 1 三主干 |
+| 5 | 2026-06-21 | [sft-and-data](2026-06-21-sft-and-data.md) | 1 三主干 |
+| 6 | 2026-06-28 | [rlhf-to-dpo](2026-06-28-rlhf-to-dpo.md) | 1 三主干 |
+| 7 | 2026-07-05 | [scaling-laws-trilogy](2026-07-05-scaling-laws-trilogy.md) | 1 三主干 |
+| 8 | 2026-07-12 | [rlvr-grpo](2026-07-12-rlvr-grpo.md)（含 DAPO） | 2 推理纪元 |
+| 9 | 2026-07-19 | [reasoning-paradigm-split](2026-07-19-reasoning-paradigm-split.md)（三家分叉） | 2 推理纪元 |
+| 10 | 2026-07-26 | [inference-time-scaling](2026-07-26-inference-time-scaling.md) | 2 推理纪元 |
+| 11 | 2026-08-02 | [kv-cache-economics](2026-08-02-kv-cache-economics.md)（含 Prompt Caching + RULER） | 3 部署效率 |
+| 12 | 2026-08-09 | [quantization-landscape](2026-08-09-quantization-landscape.md)（FP8 主线） | 3 部署效率 |
+| 13 | 2026-08-16 | [speculative-decoding-distillation](2026-08-16-speculative-decoding-distillation.md)（EAGLE-3 + R1-Distill） | 3 部署效率 |
+| 14 | 2026-08-23 | [parallelism](2026-08-23-parallelism.md)（含 Wide EP） | 3 部署效率 |
+| 15 | 2026-08-30 | [lora-peft](2026-08-30-lora-peft.md) | 3 部署效率 |
+| 16 | 2026-09-06 | [early-eras-emergence-and-alignment](2026-09-06-early-eras-emergence-and-alignment.md) | 4 综合 |
+| 17 | 2026-09-13 | [synthesis-five-years](2026-09-13-synthesis-five-years.md) | 4 综合 |
 
 主干完成后转入持续追踪，按兴趣和领域热度挑 task，不再有固定节奏。被剔除/降级的 task 见 [logs/removed-from-mainline.md](../logs/removed-from-mainline.md)。详细阶段说明见 [logs/study-plan.md](../logs/study-plan.md) 阶段 5。
 

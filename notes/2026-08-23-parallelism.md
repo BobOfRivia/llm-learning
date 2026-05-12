@@ -1,6 +1,6 @@
 # 并行训练与 Wide Expert Parallel
 
-> deadline: 2026-08-16
+> deadline: 2026-08-23
 > status: pending
 > 覆盖 tasks: 张量并行（TP）、流水线并行（PP）、ZeRO（数据并行的内存优化）、Wide Expert Parallel（MoE 服务专属）
 > 桥接: tracks/training.md, tracks/inference.md

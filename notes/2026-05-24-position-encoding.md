@@ -1,6 +1,6 @@
 # 位置编码演进
 
-> deadline: 2026-05-17
+> deadline: 2026-05-24
 > status: pending
 > 覆盖 tasks: 绝对位置编码的局限、RoPE（旋转位置编码）、上下文长度外推（YaRN / NTK-aware）
 > 桥接: tracks/architecture.md, topics/positional-encoding.md

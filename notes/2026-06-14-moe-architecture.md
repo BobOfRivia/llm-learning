@@ -1,6 +1,6 @@
 # MoE 架构与三家路线对比
 
-> deadline: 2026-06-07
+> deadline: 2026-06-14
 > status: pending
 > 覆盖 tasks: Expert 路由机制、Auxiliary-loss-free 负载均衡、Multi-Token Prediction（MTP）、Wide Expert Parallel 服务
 > 桥接: tracks/architecture.md, topics/moe.md

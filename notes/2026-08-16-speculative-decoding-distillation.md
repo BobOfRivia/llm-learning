@@ -1,6 +1,6 @@
 # 推测解码（EAGLE-3）与蒸馏（R1-Distill / On-Policy）
 
-> deadline: 2026-08-09
+> deadline: 2026-08-16
 > status: pending
 > 覆盖 tasks: 推测解码的正确性证明、EAGLE-3 在 vLLM/SGLang 的事实标准地位、R1-Distill 实战、On-Policy Distillation
 > 桥接: tracks/inference.md, topics/speculative-decoding.md

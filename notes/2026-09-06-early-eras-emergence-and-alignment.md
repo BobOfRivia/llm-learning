@@ -1,6 +1,6 @@
 # 早期纪元的遗产：涌现与对齐
 
-> deadline: 2026-08-30
+> deadline: 2026-09-06
 > status: pending
 > 覆盖 tasks: GPT-3 Few-Shot 涌现、InstructGPT 1.3B > GPT-3 175B、涌现能力争论（Schaeffer et al.）
 > 桥接: eras/era1-scaling.md, eras/era2-alignment.md, capabilities/instruction-following.md
