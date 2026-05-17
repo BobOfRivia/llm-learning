@@ -30,6 +30,8 @@ Blog 结构暗示：开头立起这束曲线 → Flash / GQA / MLA 三节各自�
 ---
 kv-cache[https://zhuanlan.zhihu.com/p/662498827]
 MLA 知乎[https://zhuanlan.zhihu.com/p/16730036197]
+MLA claude[https://claude.ai/share/e1036d3a-5abb-4871-bd00-ec84b3299122]
 MLA 苏神[https://spaces.ac.cn/archives/10091]
+
 
 MLA可以理解原理，但是距离从算法层面完全理解还有距离
