@@ -2,7 +2,7 @@
 
 > deadline: 2026-05-17
 > status: drafted
-> 覆盖 tasks: BPE 算法、Self-Attention 机制、Multi-Head Attention、Transformer 层结构（Pre-LN / FFN / 残差）、自回归语言建模目标、decoder-only 为什么统治
+> 覆盖 tasks: BPE 算法、Self-Attention 机制、Multi-Head Attention、Transformer 层结构（FFN / 残差）、自回归语言建模目标、decoder-only 为什么统治
 > 桥接: tracks/architecture.md 阶段 1, topics/attention-mechanism.md
 
 **核心问题**："Transformer 是什么、为什么 work" — 你的讲法是什么？要能从零写出 attention 公式并解释每一步的设计理由，能手动模拟 BPE 合并过程，能解释为什么现代模型都是 decoder-only 而不是 encoder-decoder 或 encoder-only。
@@ -19,13 +19,13 @@ attenion可以捕获长序列中token之间的相关性，位置编码则可以�
 还有便是模型网络的可拓展性。
 
 BPE算法不重要，我也仅是了解，简单说说吧。
-BPE是一套不借助模型的分词算法，主要是用于英文的分词，优势是启动快，可以适配生词。
+BPE是一套不借助模型的分词算法，优势是启动快，可以适配生词。
 字符级别拆分，合并最高词频的相邻字符组成新的字符，再次循环合并最高词频的相邻字符，直到达到设定的词表大小。
 
 为什么现在的大模型普遍是decoder-only
-一方面因为scaling law 在decoder-only上得到了验证，随着优质数据集和模型规模的提升模型能力会明显提升。
-另一方面，encoder-decoder在训练阶段，encoder部分存在data leak，token可以看到前后的内容，相比decoder-only，decoder-only是纯粹的预测未来token.因此decoder-only是一个更难的任务，因此它的上限更高。
-但并不是说decoder-only完全替代encoder-decoder，encoder-decoder有天然擅长的领域，例如翻译场景、分类场景那种天然输入完整sentence进行完整考虑后，输出序列的场景。
+因为scaling law 在decoder-only上得到了验证，随着优质数据集和模型规模的提升模型能力会明显提升。
+但并不是说decoder-only完全替代encoder-decoder，encoder-decoder有天然擅长的领域，例如翻译场景那种天然输入完整sentence进行完整考虑后，输出序列的场景。
+而encoder-only更擅长一些分类任务。
 
 
 
@@ -53,6 +53,11 @@ attention天然不包含位置信息，如果期望attention中能够包含位�
 3. 之后时ADD & Norm
 ADD 便是残差，其作用有说法是让模型知道attention后产生的差异
 Norm，token向量维度做归一化处理，使得则是为了使得梯度下降更快更稳定。
+
+4. FFN
+encoder层和decoder层都有FFN
+encoder层在multi-head + add & norm之后便是 ffn+add&norm
+decoder层在第二个multi-head + add & norm 之后便是 ffn+add&norm
 
 ---
 
