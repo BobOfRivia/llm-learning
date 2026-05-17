@@ -25,6 +25,9 @@
 
 在 64k 长上下文场景下，**attention 一项就吃掉总推理时延的 70–80%**。整个代码库、几百页 PDF、长链 reasoning（如 R1、o1）越火，这个瓶颈越要命。
 
+![Figure 1: NSA 与 Full Attention 的性能与速度对比](https://arxiv.org/html/2502.11089v1/x1.png)
+*Figure 1（论文 §1）：左图——NSA 在 general / long-context / reasoning 三类 benchmark 上均超过或追平 full attention。右图——64k 序列下 decoding、forward、backward 三阶段全部加速。这张图是整篇论文的"封面图"，浓缩了 NSA 的两大卖点：又快又好。*
+
 ### 2.2 自然的想法：稀疏注意力
 
 观察事实：softmax 算出来的注意力分布通常很集中——绝大多数 token 的权重接近 0。既然如此，何必把所有 token 都算一遍？只挑重要的就行。
@@ -62,6 +65,9 @@ NSA 论文（第 2 节）把前人方法的问题归纳成两大类：
 ---
 
 ## Part 3（中）：NSA 的核心思想 —— 三条路并行
+
+![Figure 2: NSA 整体架构](https://arxiv.org/html/2502.11089v1/x2.png)
+*Figure 2（论文 §2）：NSA 的整体框架。左图——三条并行的 attention 分支：compression（粗粒度全局）、selection（细粒度精读）、sliding window（局部）。右图——三种 attention pattern 的可视化：绿色是需要计算的区域，白色是被跳过的区域。这张图建议反复看，它是理解 NSA 的"地图"。*
 
 ### 3.1 直觉：像人读长文档
 
@@ -240,7 +246,13 @@ NSA 反其道而行：
 
 **结果**：算术强度被精心平衡，eliminating redundant KV transfers，Tensor Core 几乎打满。
 
+![Figure 3: NSA 的 Kernel 设计示意图](https://arxiv.org/html/2502.11089v1/x3.png)
+*Figure 3（论文 §3.4）：NSA selection-attention kernel 的前向实现。Grid Loop 按 GQA group 加载 query，Inner Loop 把稀疏 KV block 加载到 SRAM。**绿色块在 SRAM 上，蓝色块在 HBM 上**——这张图最关键的信息是：组内 H 个 head 的 query 一起被加载，它们共享同一组 KV 索引，所以 KV 只需读一次。这是「访存稀疏」真正落地的核心机制。*
+
 ### 4.5 实际速度（A100 上）
+
+![Figure 6: NSA kernel 与 FlashAttention-2 的训练速度对比](https://arxiv.org/html/2502.11089v1/x6.png)
+*Figure 6（论文 §5.1）：基于 Triton 的 NSA kernel 与同样 Triton 实现的 FlashAttention-2 对比。**关键观察**——序列越长，加速比越大，64k 时 forward 9× / backward 6×。这正是 NSA 设计的目标场景：长上下文。*
 
 64k 序列长度下，对比 FlashAttention-2：
 
@@ -274,6 +286,9 @@ NSA 反其道而行：
 
 ### 5.2 通用 Benchmark（短文本，Table 1）
 
+![Figure 4: NSA 与 Full Attention 的预训练 loss 曲线](https://arxiv.org/html/2502.11089v1/x4.png)
+*Figure 4（论文 §4.1）：27B 模型在 270B token 上的预训练 loss。**NSA 的 loss 始终低于 Full Attention**——稀疏不仅没有损失模型能力，反而起到了隐式正则化的作用。*
+
 即使在短文本上（NSA 的稀疏优势用不出来），9 个 benchmark 中 **NSA 在 7 个上超过 full attention**：
 
 | 任务 | Full Attn | NSA | 提升 |
@@ -305,6 +320,9 @@ NSA 不仅超过所有稀疏 baseline，甚至 **超过了 Exact-Top（每步都
 特别亮眼：多跳问答（HPQ +0.087, 2Wiki +0.051）、code 理解（LCC +0.069）。
 
 ### 5.4 Needle-in-a-Haystack（64k）
+
+![Figure 5: 64k 长度下的 Needle-in-a-Haystack 检索准确率](https://arxiv.org/html/2502.11089v1/x5.png)
+*Figure 5（论文 §4.3）：在 64k 上下文中各位置埋一根"针"，让模型找出来。**NSA 全绿，100% 准确**——这是稀疏方法最容易翻车的测试，因为一旦"针"所在的 token 被裁掉就无法回答。NSA 的层级设计（compression 先粗定位、selection 再精读）天然适合此类任务。*
 
 NSA 在 64k 上达到**完美检索准确率**（图 5 全绿）。这是稀疏方法最容易翻车的地方——一旦"针"所在的 token 被剪掉就找不到。NSA 的层级设计（先 compression 定位、再 selection 精读）天然适合这种任务。
 
@@ -339,6 +357,9 @@ NSA 论文的 6.1 节明确说他们试过聚类方案，但有三个硬伤：
 NSA 的精妙之处：**复用 compression 分支的 softmax 分数**作为 selection 的重要度信号——既可微，又零额外开销，还和后续 attention 计算完全一致。
 
 ### 6.3 Attention map 的可视化（图 8）
+
+![Figure 8: Full Attention 模型的 attention map 可视化](https://arxiv.org/html/2502.11089v1/x8.png)
+*Figure 8（论文 §6.2）：来自 27B Full Attention 模型的真实 attention map，浅色表示高 attention。**关键观察**——attention 分数明显呈块状聚集，相邻 key 的分数相似。这是 NSA 选择采用 block-level（而不是 token-level）稀疏的实证依据：既然相邻 token 共享相似的注意力命运，那就以块为单位选，反而既准又快。*
 
 论文可视化了 dense attention 的真实分布，发现注意力分数确实呈**块状聚集**——相邻 key 的分数相似。这是 block-level 稀疏在统计上能成立的根本依据。
 
@@ -387,3 +408,22 @@ NSA 的精妙之处：**复用 compression 分支的 softmax 分数**作为 sele
 | $w$ | Sliding window 大小 | 512 |
 | $H$ | GQA group 内 head 数 | 16（64 head / 4 group） |
 | $d_k, d_v$ | key/value 维度 | 192 / 128 |
+
+---
+
+## 附录：本文引用的论文图片清单
+
+所有图片均来自论文 HTML 版（[arxiv.org/html/2502.11089v1](https://arxiv.org/html/2502.11089v1)），版权归原作者所有。
+
+| 编号 | 位置 | 内容 | 链接 |
+|------|------|------|------|
+| Figure 1 | §1 | 性能 vs 速度总览（封面图） | [x1.png](https://arxiv.org/html/2502.11089v1/x1.png) |
+| Figure 2 | §2 | NSA 整体架构 + 三种 attention pattern | [x2.png](https://arxiv.org/html/2502.11089v1/x2.png) |
+| Figure 3 | §3.4 | Kernel 设计（GQA group-centric） | [x3.png](https://arxiv.org/html/2502.11089v1/x3.png) |
+| Figure 4 | §4.1 | 预训练 loss 曲线 | [x4.png](https://arxiv.org/html/2502.11089v1/x4.png) |
+| Figure 5 | §4.3 | Needle-in-a-Haystack（64k） | [x5.png](https://arxiv.org/html/2502.11089v1/x5.png) |
+| Figure 6 | §5.1 | NSA vs FlashAttention-2 训练速度 | [x6.png](https://arxiv.org/html/2502.11089v1/x6.png) |
+| Figure 7 | §6.1 | 不同 selection 策略的 loss 对比 | [x7.png](https://arxiv.org/html/2502.11089v1/x7.png) |
+| Figure 8 | §6.2 | Full Attention attention map 可视化 | [x8.png](https://arxiv.org/html/2502.11089v1/x8.png) |
+
+> **图片显示注意事项**：本笔记的图片通过外链直接引用 arxiv.org。在 Typora、Obsidian、VS Code Markdown Preview、GitHub、Notion 等大多数渲染器中可直接显示；如果你在离线环境下查看，可手动下载图片并替换为本地路径。
