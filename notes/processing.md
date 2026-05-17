@@ -20,3 +20,5 @@
 4. MLA 算法过程
 5. Online Softmax 算法过程
 6. NSA[topics/NSA_由浅入深.md]
+[https://zhuanlan.zhihu.com/p/24591391824]
+[https://zhuanlan.zhihu.com/p/24841366485]
