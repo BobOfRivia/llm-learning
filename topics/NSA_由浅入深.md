@@ -95,7 +95,7 @@ $$
 把前面所有 key 按块（block）切。设块长度 $l = 32$、步长 $d = 16$（相邻块有重叠，防止信息断裂）。每个块通过一个**小 MLP $\varphi$（带块内位置编码）** 压成 1 个向量：
 
 $$
-\tilde{K}_t^{\text{cmp}} = \left\{ \varphi(\mathbf{k}_{id+1:id+l}) \,\middle|\, 1 \le i \le \lfloor (t-l)/d \rfloor \right\}
+\tilde{K}_t^{\text{cmp}} = \Big\{ \varphi(\mathbf{k}_{id+1:id+l}) \;\Big|\; 1 \le i \le \lfloor (t-l)/d \rfloor \Big\}
 $$
 
 64k 个 token 经过 $d=16$ 的压缩，只剩约 4000 个"摘要向量"。query 对这些摘要做 attention，得到全局视野，但成本骤降。
