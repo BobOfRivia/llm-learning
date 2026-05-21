@@ -1,6 +1,6 @@
 # 量化全景（FP8 为主线）
 
-> deadline: 2026-08-09
+> deadline: 2026-06-04
 > status: pending
 > 覆盖 tasks: FP8 作为训练+推理统一精度、LLM 量化的核心难点（outlier 处理）、AWQ / GPTQ / SmoothQuant 对比、GGUF 与边缘部署、PTQ vs QAT
 > 桥接: tracks/inference.md, topics/quantization.md

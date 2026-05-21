@@ -1,6 +1,6 @@
 # Scaling Laws 修正史
 
-> deadline: 2026-07-05
+> deadline: 2026-05-29
 > status: pending
 > 覆盖 tasks: Kaplan→Chinchilla 修正的关键判据、过训练时代的目标函数重写、MoE Scaling Laws 五因子框架
 > 桥接: tracks/scaling.md

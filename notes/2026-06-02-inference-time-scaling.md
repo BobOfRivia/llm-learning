@@ -1,6 +1,6 @@
 # Inference-time Scaling
 
-> deadline: 2026-07-26
+> deadline: 2026-06-02
 > status: pending
 > 覆盖 tasks: Inference-time Scaling 机制、Best-of-N 采样的数学、Chain-of-Thought 为什么有效
 > 桥接: capabilities/inference-time-compute.md, topics/inference-time-compute.md, topics/chain-of-thought.md

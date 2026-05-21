@@ -1,6 +1,6 @@
 # 五年四纪元综合
 
-> deadline: 2026-09-13
+> deadline: 2026-06-10
 > status: pending
 > 覆盖 tasks: 全部（综合）
 > 桥接: overview.md, eras/era1-scaling.md, eras/era2-alignment.md, eras/era3-capability-race.md, eras/era4-reasoning.md, eras/tension-efficiency-openness.md

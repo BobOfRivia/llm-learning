@@ -1,6 +1,6 @@
 # SFT 与数据工程
 
-> deadline: 2026-06-21
+> deadline: 2026-05-27
 > status: pending
 > 覆盖 tasks: SFT 的数据工程、代码数据对推理能力的影响
 > 桥接: tracks/training.md, tracks/data.md

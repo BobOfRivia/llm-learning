@@ -1,6 +1,6 @@
 # 推理模型的范式分叉
 
-> deadline: 2026-07-19
+> deadline: 2026-06-01
 > status: pending
 > 覆盖 tasks: R1-Zero 的涌现、o1 / o3 的技术实质、Claude 3.7 / 4 的 hybrid thinking、推理蒸馏机制
 > 桥接: topics/rl-for-reasoning.md, eras/era4-reasoning.md, labs/openai.md, labs/anthropic.md

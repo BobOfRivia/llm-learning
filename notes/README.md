@@ -61,30 +61,73 @@ pending → drafted → verified → mastered
 
 ## 节奏总览
 
-主干 18 篇 × 1 周/篇，从 2026-05-03 起，到 2026-09-13 结束（2026-05-12 整体平移一周）。每周日是 deadline。允许动态调整：超前完成可以提前下一篇；落后可以延期，但累计落后超过 2 周需要重新评估覆盖范围。
+求职冲刺节奏：6 天/周，周日休。整体分三段——**铺面入门 → 选择性深化 → Agent 项目**，对应到 LLM 学习的 17 篇主干（#0 已 mastered）：
 
-| # | deadline | blog | 阶段 |
+```
+阶段一·铺面入门  2026-05-22 ~ 2026-06-10  17 篇全部走到 drafted
+阶段二·深化      2026-06-11 ~ 2026-07-04  9 篇 mastered + 8 篇 verified
+阶段三·Agent 项目 2026-07-06 ~ 2026-07-19  另一项目，本项目暂停
+2026-07-20 起     开始投简历
+```
+
+**文件名上的 deadline 已失效，以下表格为权威调度。**
+
+### 阶段一：铺面入门（每篇 1 天，目标 drafted）
+
+| # | 排定日 | blog | 备注 |
 |---|---|---|---|
-| 0 | 2026-05-17 | [transformer-foundation](2026-05-17-transformer-foundation.md) | 0 地基 |
-| 1 | 2026-05-24 | [position-encoding](2026-05-24-position-encoding.md) | 1 三主干 |
-| 2 | 2026-05-31 | [attention-engineering](2026-05-31-attention-engineering.md)（稠密） | 1 三主干 |
-| 3 | 2026-06-07 | [attention-sparse-hybrid](2026-06-07-attention-sparse-hybrid.md)（稀疏 / Hybrid） | 1 三主干 |
-| 4 | 2026-06-14 | [moe-architecture](2026-06-14-moe-architecture.md) | 1 三主干 |
-| 5 | 2026-06-21 | [sft-and-data](2026-06-21-sft-and-data.md) | 1 三主干 |
-| 6 | 2026-06-28 | [rlhf-to-dpo](2026-06-28-rlhf-to-dpo.md) | 1 三主干 |
-| 7 | 2026-07-05 | [scaling-laws-trilogy](2026-07-05-scaling-laws-trilogy.md) | 1 三主干 |
-| 8 | 2026-07-12 | [rlvr-grpo](2026-07-12-rlvr-grpo.md)（含 DAPO） | 2 推理纪元 |
-| 9 | 2026-07-19 | [reasoning-paradigm-split](2026-07-19-reasoning-paradigm-split.md)（三家分叉） | 2 推理纪元 |
-| 10 | 2026-07-26 | [inference-time-scaling](2026-07-26-inference-time-scaling.md) | 2 推理纪元 |
-| 11 | 2026-08-02 | [kv-cache-economics](2026-08-02-kv-cache-economics.md)（含 Prompt Caching + RULER） | 3 部署效率 |
-| 12 | 2026-08-09 | [quantization-landscape](2026-08-09-quantization-landscape.md)（FP8 主线） | 3 部署效率 |
-| 13 | 2026-08-16 | [speculative-decoding-distillation](2026-08-16-speculative-decoding-distillation.md)（EAGLE-3 + R1-Distill） | 3 部署效率 |
-| 14 | 2026-08-23 | [parallelism](2026-08-23-parallelism.md)（含 Wide EP） | 3 部署效率 |
-| 15 | 2026-08-30 | [lora-peft](2026-08-30-lora-peft.md) | 3 部署效率 |
-| 16 | 2026-09-06 | [early-eras-emergence-and-alignment](2026-09-06-early-eras-emergence-and-alignment.md) | 4 综合 |
-| 17 | 2026-09-13 | [synthesis-five-years](2026-09-13-synthesis-five-years.md) | 4 综合 |
+| 0 | — | [transformer-foundation](2026-05-17-transformer-foundation.md) | 已 mastered |
+| 1 | 05-22 Fri | [position-encoding](2026-05-22-position-encoding.md) | |
+| 2 | 05-23 Sat | [attention-engineering](2026-05-23-attention-engineering.md)（稠密） | 已有入门基础，可加快 |
+| 3 | 05-25 Mon | [attention-sparse-hybrid](2026-05-25-attention-sparse-hybrid.md) | |
+| 4 | 05-26 Tue | [moe-architecture](2026-05-26-moe-architecture.md) | |
+| 5 | 05-27 Wed | [sft-and-data](2026-05-27-sft-and-data.md) | |
+| 6 | 05-28 Thu | [rlhf-to-dpo](2026-05-28-rlhf-to-dpo.md) | |
+| 7 | 05-29 Fri | [scaling-laws-trilogy](2026-05-29-scaling-laws-trilogy.md) | |
+| 8 | 05-30 Sat | [rlvr-grpo](2026-05-30-rlvr-grpo.md) | |
+| 9 | 06-01 Mon | [reasoning-paradigm-split](2026-06-01-reasoning-paradigm-split.md) | |
+| 10 | 06-02 Tue | [inference-time-scaling](2026-06-02-inference-time-scaling.md) | |
+| 11 | 06-03 Wed | [kv-cache-economics](2026-06-03-kv-cache-economics.md) | |
+| 12 | 06-04 Thu | [quantization-landscape](2026-06-04-quantization-landscape.md) | |
+| 13 | 06-05 Fri | [speculative-decoding-distillation](2026-06-05-speculative-decoding-distillation.md) | |
+| 14 | 06-06 Sat | [parallelism](2026-06-06-parallelism.md) | |
+| 15 | 06-08 Mon | [lora-peft](2026-06-08-lora-peft.md) | |
+| 16 | 06-09 Tue | [early-eras-emergence-and-alignment](2026-06-09-early-eras-emergence-and-alignment.md) | |
+| 17 | 06-10 Wed | [synthesis-five-years](2026-06-10-synthesis-five-years.md) | |
 
-主干完成后转入持续追踪，按兴趣和领域热度挑 task，不再有固定节奏。被剔除/降级的 task 见 [logs/removed-from-mainline.md](../logs/removed-from-mainline.md)。详细阶段说明见 [logs/study-plan.md](../logs/study-plan.md) 阶段 5。
+铺面阶段每篇目标只是 **drafted**（理解概念锚点 + 大致原理，不强求公式推导跟到底）。落后一天可以从次周顺延，落后三天以上要重排。
+
+### 阶段二：深化（每篇 mastered ~2 天 / verified ~0.5 天）
+
+| 篇号 | 目标 | 选中理由 |
+|---|---|---|
+| 1 | **mastered** | RoPE 推导经典；YaRN/位置插值是长上下文延伸 |
+| 2 | **mastered** | FlashAttention IO 递推、MLA、Online Softmax——纯公式区；可顺带 DyT |
+| 3 | **mastered** | NSA / MoBA / Hybrid 是 2026 前沿，开始进面试 |
+| 4 | **mastered** | DeepSeek-V3 路由 + 负载均衡损失，MoE 已主流 |
+| 5 | verified | 数据工程一般不深问 |
+| 6 | **mastered** | PPO/DPO 推导经典，且是 RLVR 前置 |
+| 7 | **mastered** | Kaplan/Chinchilla 数学是知识地基 |
+| 8 | **mastered** | 2025-2026 最大范式转折，GRPO 公式必会 |
+| 9 | verified | 综合比较型，#8/#10 master 后这一篇够用 |
+| 10 | **mastered** | best-of-N / PRM 是理解 o-series/R1 的钥匙 |
+| 11 | **mastered** | Agent 调用经济学，cost/latency 核心 |
+| 12 | verified | FP8 知道在用即可 |
+| 13 | verified | EAGLE-3 / R1-Distill 知道在用 |
+| 14 | verified | 训练并行不是 Agent 岗重点 |
+| 15 | verified | LoRA 数学标准化，知道用法即可 |
+| 16 | verified | 历史叙事，串故事 |
+| 17 | verified | 综合叙事，串故事 |
+
+合计 9 篇 mastered + 8 篇 verified。Mastered 走完整流程（drafted → 我校验 → 你考核），verified 只校验事实。
+
+### 阶段三：Agent 项目（2026-07-06 ~ 07-19）
+
+由另一项目承接，本项目暂停 15 天。期间不安排 LLM 主干推进。
+
+### 2026-07-20 之后
+
+转入持续追踪：未 mastered 的篇章按面试反馈优先级补深；新进展走 [logs/new-arrivals.md](../logs/new-arrivals.md) 流程。被剔除/降级的 task 见 [logs/removed-from-mainline.md](../logs/removed-from-mainline.md)，详细路径说明见 [logs/study-plan.md](../logs/study-plan.md)。
 
 ## 命名
 

@@ -1,6 +1,6 @@
 # RLHF → DPO
 
-> deadline: 2026-06-28
+> deadline: 2026-05-28
 > status: pending
 > 覆盖 tasks: RLHF 三阶段流程的概念地图（不深入 PPO 推导）、DPO 的核心化简、DPO 在生产中的实际位置
 > 桥接: tracks/training.md, tracks/alignment.md

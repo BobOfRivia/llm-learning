@@ -479,7 +479,7 @@
 
 - [ ] **⭐⭐⭐ NSA（Native Sparse Attention）**：DeepSeek 2025-02 的三路稀疏（压缩 + 选择 + 滑动窗口），原生可训练
   - 目标：解释"原生可训练"相对早期 Longformer/BigBird"事后近似"的本质区别
-  - 锚点：进入 blog 3 [attention-sparse-hybrid](../notes/2026-06-07-attention-sparse-hybrid.md)
+  - 锚点：进入 blog 3 [attention-sparse-hybrid](../notes/2026-05-25-attention-sparse-hybrid.md)
   - 落地：DeepSeek V3.2-Exp（2025-09）
 
 - [ ] **⭐⭐ MoBA（Mixture of Block Attention）**：Moonshot 2025-02，块级稀疏路由
@@ -499,7 +499,7 @@
 
 - [ ] **⭐⭐ 三家 MoE 路由对比**：DeepSeek（1 共享 + 8/256）vs Qwen3（top-8/128 无共享）vs Llama 4（1+1）
   - 目标：理解共享专家的必要性争论 + 各家稀疏度选择背后的服务约束
-  - 锚点：blog 4 [moe-architecture](../notes/2026-06-14-moe-architecture.md)
+  - 锚点：blog 4 [moe-architecture](../notes/2026-05-26-moe-architecture.md)
 
 - [ ] **⭐⭐ Multi-Token Prediction（MTP）**：训练时多 token 预测 + 推理时天然兼容推测解码
   - 目标：理解为什么这个机制同时改善训练 sample efficiency 和推理 latency
@@ -508,18 +508,18 @@
 
 - [ ] **⭐⭐⭐ Wide Expert Parallel**：vLLM + llm-d 的 256 专家分片服务
   - 目标：理解 EP 的 all-to-all 通信模式与 TP 的本质区别
-  - 锚点：blog 4 + blog 14 [parallelism](../notes/2026-08-23-parallelism.md)
+  - 锚点：blog 4 + blog 14 [parallelism](../notes/2026-06-06-parallelism.md)
 
 ### Reasoning RL
 
 - [ ] **⭐⭐⭐ DAPO 四项修正**：Clip-Higher / Dynamic Sampling / Token-level PG Loss / Overlong Reward Shaping
   - 目标：每一项对应解决 GRPO 在 long-CoT 训练中的哪个具体失败模式
-  - 锚点：blog 8 [rlvr-grpo](../notes/2026-07-12-rlvr-grpo.md)
+  - 锚点：blog 8 [rlvr-grpo](../notes/2026-05-30-rlvr-grpo.md)
   - 落地：ByteDance/Tsinghua 2025
 
 - [ ] **⭐⭐⭐ 推理范式三家分叉**：OpenAI dedicated reasoning model / Anthropic hybrid thinking / DeepSeek 开源蒸馏
   - 目标：能解释三家产品哲学差异 + 各自技术取舍
-  - 锚点：blog 9 [reasoning-paradigm-split](../notes/2026-07-19-reasoning-paradigm-split.md)
+  - 锚点：blog 9 [reasoning-paradigm-split](../notes/2026-06-01-reasoning-paradigm-split.md)
 
 - [ ] **⭐⭐ Anthropic Hybrid Thinking 设计**：thinking budget 参数 + 一个模型双 mode
   - 目标：理解为什么 Anthropic 选这条路而非分裂模型
@@ -527,13 +527,13 @@
 
 - [ ] **⭐⭐ On-Policy Distillation**：Thinking Machines 2025，解决静态蒸馏的分布漂移
   - 目标：与 GRPO（用 verifier）的边界
-  - 锚点：blog 13 [speculative-decoding-distillation](../notes/2026-08-16-speculative-decoding-distillation.md)
+  - 锚点：blog 13 [speculative-decoding-distillation](../notes/2026-06-05-speculative-decoding-distillation.md)
 
 ### 推理服务（KV / 长上下文 / 推测解码）
 
 - [ ] **⭐⭐ Prompt Caching（跨请求 KV 复用）**：Anthropic 显式 cache_control（5min/1h TTL）vs OpenAI 隐式自动
   - 目标：理解两种设计哲学差异 + 对长 system prompt 应用的成本曲线影响
-  - 锚点：blog 11 [kv-cache-economics](../notes/2026-08-02-kv-cache-economics.md)
+  - 锚点：blog 11 [kv-cache-economics](../notes/2026-06-03-kv-cache-economics.md)
 
 - [ ] **⭐⭐⭐ RULER vs NIAH 长上下文真实退化**：四类任务（multi-needle / multi-hop / aggregation / QA）
   - 目标：解释为什么 1M context 在 RULER 上 50K-130K 就显著掉
@@ -548,5 +548,5 @@
 
 - [ ] **⭐⭐⭐ FP8 作为训练+推理统一精度**：DeepSeek V3 首次大规模 FP8 训练成功 + Qwen 3.5 native FP8 pipeline
   - 目标：解释 E4M3 vs E5M2 两种格式的定位 + 为什么 FP8 能挑战 BF16 在训练中的地位
-  - 锚点：blog 12 [quantization-landscape](../notes/2026-08-09-quantization-landscape.md)
+  - 锚点：blog 12 [quantization-landscape](../notes/2026-06-04-quantization-landscape.md)
 

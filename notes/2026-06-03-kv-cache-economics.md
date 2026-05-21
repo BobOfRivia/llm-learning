@@ -1,6 +1,6 @@
 # KV Cache 经济学（含 Prompt Caching 与长上下文真实退化）
 
-> deadline: 2026-08-02
+> deadline: 2026-06-03
 > status: pending
 > 覆盖 tasks: KV Cache 工作原理、PagedAttention 设计、Prefill vs Decode 瓶颈差异、跨请求 Prompt Caching、长上下文真实退化（NIAH vs RULER）
 > 桥接: tracks/inference.md, topics/kv-cache.md
