@@ -28,6 +28,7 @@
 Blog 结构暗示：开头立起这束曲线 → Flash / GQA / MLA 三节各自对应"我在改哪一根、改的是斜率/截距/渐近阶"。这样"算法形态不变、动的是成本曲线"才有抓手。
 
 ---
+FlashAttention 知乎[https://zhuanlan.zhihu.com/p/668888063]
 kv-cache[https://zhuanlan.zhihu.com/p/662498827]
 MLA 知乎[https://zhuanlan.zhihu.com/p/16730036197]
 MLA claude[https://claude.ai/share/e1036d3a-5abb-4871-bd00-ec84b3299122]
