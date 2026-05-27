@@ -27,5 +27,7 @@
 1. [topics/MoE混合专家模型详解.md](../topics/MoE混合专家模型详解.md)
 2. [群魔乱舞：MoE 大模型详解 - 知乎](https://zhuanlan.zhihu.com/p/672712751)
 3. [MoE 训练论文解读之 Mixtral 8x7B：稀疏混合专家模型 - 知乎](https://zhuanlan.zhihu.com/p/673048264)
+4. [DeepseekMoe - 知乎](https://zhuanlan.zhihu.com/p/18565423596)
+5. [DeepseekMoe 论文](../topics/deepseekmoe_zh.md)
 
 ---
